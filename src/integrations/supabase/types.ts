@@ -249,7 +249,415 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      block_player: { Args: { p_user_id: string }; Returns: undefined }
+      claim_abandon: {
+        Args: { p_code: string }
+        Returns: {
+          board: string
+          code: string
+          created_at: string
+          expires_at: string
+          guest_autopilot: boolean
+          guest_id: string | null
+          guest_rematch: boolean
+          guest_seen: string | null
+          host_autopilot: boolean
+          host_id: string
+          host_rematch: boolean
+          host_seen: string
+          host_symbol: string
+          id: string
+          result: string | null
+          round: number
+          status: string
+          turn: string
+          turn_deadline: string | null
+          updated_at: string
+          winner_id: string | null
+          winning_line: number[] | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      claim_timeout: {
+        Args: { p_code: string }
+        Returns: {
+          board: string
+          code: string
+          created_at: string
+          expires_at: string
+          guest_autopilot: boolean
+          guest_id: string | null
+          guest_rematch: boolean
+          guest_seen: string | null
+          host_autopilot: boolean
+          host_id: string
+          host_rematch: boolean
+          host_seen: string
+          host_symbol: string
+          id: string
+          result: string | null
+          round: number
+          status: string
+          turn: string
+          turn_deadline: string | null
+          updated_at: string
+          winner_id: string | null
+          winning_line: number[] | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      create_match: {
+        Args: { p_symbol?: string }
+        Returns: {
+          board: string
+          code: string
+          created_at: string
+          expires_at: string
+          guest_autopilot: boolean
+          guest_id: string | null
+          guest_rematch: boolean
+          guest_seen: string | null
+          host_autopilot: boolean
+          host_id: string
+          host_rematch: boolean
+          host_seen: string
+          host_symbol: string
+          id: string
+          result: string | null
+          round: number
+          status: string
+          turn: string
+          turn_deadline: string | null
+          updated_at: string
+          winner_id: string | null
+          winning_line: number[] | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      ensure_profile: {
+        Args: { p_avatar?: string; p_nickname?: string; p_player_id?: string }
+        Returns: {
+          appear_offline: boolean
+          avatar: string
+          created_at: string
+          draws: number
+          id: string
+          last_seen: string
+          losses: number
+          nickname: string
+          player_id: string
+          wins: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      find_player: {
+        Args: { p_player_id: string }
+        Returns: {
+          avatar: string
+          id: string
+          nickname: string
+          player_id: string
+        }[]
+      }
+      generate_player_id: { Args: never; Returns: string }
+      heartbeat: { Args: never; Returns: undefined }
+      join_match: {
+        Args: { p_code: string }
+        Returns: {
+          board: string
+          code: string
+          created_at: string
+          expires_at: string
+          guest_autopilot: boolean
+          guest_id: string | null
+          guest_rematch: boolean
+          guest_seen: string | null
+          host_autopilot: boolean
+          host_id: string
+          host_rematch: boolean
+          host_seen: string
+          host_symbol: string
+          id: string
+          result: string | null
+          round: number
+          status: string
+          turn: string
+          turn_deadline: string | null
+          updated_at: string
+          winner_id: string | null
+          winning_line: number[] | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      leave_match: { Args: { p_code: string }; Returns: undefined }
+      list_blocked: {
+        Args: never
+        Returns: {
+          avatar: string
+          nickname: string
+          player_id: string
+          user_id: string
+        }[]
+      }
+      list_friends: {
+        Args: never
+        Returns: {
+          avatar: string
+          direction: string
+          draws: number
+          friendship_id: string
+          losses: number
+          nickname: string
+          online: boolean
+          player_id: string
+          status: string
+          user_id: string
+          wins: number
+        }[]
+      }
+      make_move: {
+        Args: { p_cell: number; p_code: string }
+        Returns: {
+          board: string
+          code: string
+          created_at: string
+          expires_at: string
+          guest_autopilot: boolean
+          guest_id: string | null
+          guest_rematch: boolean
+          guest_seen: string | null
+          host_autopilot: boolean
+          host_id: string
+          host_rematch: boolean
+          host_seen: string
+          host_symbol: string
+          id: string
+          result: string | null
+          round: number
+          status: string
+          turn: string
+          turn_deadline: string | null
+          updated_at: string
+          winner_id: string | null
+          winning_line: number[] | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      match_heartbeat: {
+        Args: { p_code: string }
+        Returns: {
+          board: string
+          code: string
+          created_at: string
+          expires_at: string
+          guest_autopilot: boolean
+          guest_id: string | null
+          guest_rematch: boolean
+          guest_seen: string | null
+          host_autopilot: boolean
+          host_id: string
+          host_rematch: boolean
+          host_seen: string
+          host_symbol: string
+          id: string
+          result: string | null
+          round: number
+          status: string
+          turn: string
+          turn_deadline: string | null
+          updated_at: string
+          winner_id: string | null
+          winning_line: number[] | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      merge_guest_stats: {
+        Args: { p_draws: number; p_losses: number; p_wins: number }
+        Returns: {
+          appear_offline: boolean
+          avatar: string
+          created_at: string
+          draws: number
+          id: string
+          last_seen: string
+          losses: number
+          nickname: string
+          player_id: string
+          wins: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      record_game_result: {
+        Args: { p_result: string }
+        Returns: {
+          appear_offline: boolean
+          avatar: string
+          created_at: string
+          draws: number
+          id: string
+          last_seen: string
+          losses: number
+          nickname: string
+          player_id: string
+          wins: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      request_rematch: {
+        Args: { p_code: string }
+        Returns: {
+          board: string
+          code: string
+          created_at: string
+          expires_at: string
+          guest_autopilot: boolean
+          guest_id: string | null
+          guest_rematch: boolean
+          guest_seen: string | null
+          host_autopilot: boolean
+          host_id: string
+          host_rematch: boolean
+          host_seen: string
+          host_symbol: string
+          id: string
+          result: string | null
+          round: number
+          status: string
+          turn: string
+          turn_deadline: string | null
+          updated_at: string
+          winner_id: string | null
+          winning_line: number[] | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      send_friend_request: { Args: { p_player_id: string }; Returns: undefined }
+      set_autopilot: {
+        Args: { p_code: string; p_on: boolean }
+        Returns: {
+          board: string
+          code: string
+          created_at: string
+          expires_at: string
+          guest_autopilot: boolean
+          guest_id: string | null
+          guest_rematch: boolean
+          guest_seen: string | null
+          host_autopilot: boolean
+          host_id: string
+          host_rematch: boolean
+          host_seen: string
+          host_symbol: string
+          id: string
+          result: string | null
+          round: number
+          status: string
+          turn: string
+          turn_deadline: string | null
+          updated_at: string
+          winner_id: string | null
+          winning_line: number[] | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      ttt_ai_move: {
+        Args: { p_board: string; p_symbol: string }
+        Returns: number
+      }
+      ttt_at: { Args: { p_board: string; p_cell: number }; Returns: string }
+      ttt_evaluate: { Args: { p_board: string }; Returns: Json }
+      ttt_finish: {
+        Args: {
+          p_eval: Json
+          p_match: Database["public"]["Tables"]["matches"]["Row"]
+        }
+        Returns: {
+          board: string
+          code: string
+          created_at: string
+          expires_at: string
+          guest_autopilot: boolean
+          guest_id: string | null
+          guest_rematch: boolean
+          guest_seen: string | null
+          host_autopilot: boolean
+          host_id: string
+          host_rematch: boolean
+          host_seen: string
+          host_symbol: string
+          id: string
+          result: string | null
+          round: number
+          status: string
+          turn: string
+          turn_deadline: string | null
+          updated_at: string
+          winner_id: string | null
+          winning_line: number[] | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      ttt_lines: { Args: never; Returns: number[][] }
     }
     Enums: {
       friend_status: "pending" | "accepted"
