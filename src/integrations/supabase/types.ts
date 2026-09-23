@@ -14,7 +14,236 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      blocked_users: {
+        Row: {
+          blocked_id: string
+          blocker_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          blocked_id: string
+          blocker_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          blocked_id?: string
+          blocker_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      friendships: {
+        Row: {
+          addressee_id: string
+          created_at: string
+          id: string
+          requester_id: string
+          status: Database["public"]["Enums"]["friend_status"]
+          updated_at: string
+        }
+        Insert: {
+          addressee_id: string
+          created_at?: string
+          id?: string
+          requester_id: string
+          status?: Database["public"]["Enums"]["friend_status"]
+          updated_at?: string
+        }
+        Update: {
+          addressee_id?: string
+          created_at?: string
+          id?: string
+          requester_id?: string
+          status?: Database["public"]["Enums"]["friend_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      match_moves: {
+        Row: {
+          autopilot: boolean
+          cell: number
+          created_at: string
+          id: string
+          match_id: string
+          player_id: string
+          round: number
+          symbol: string
+        }
+        Insert: {
+          autopilot?: boolean
+          cell: number
+          created_at?: string
+          id?: string
+          match_id: string
+          player_id: string
+          round?: number
+          symbol: string
+        }
+        Update: {
+          autopilot?: boolean
+          cell?: number
+          created_at?: string
+          id?: string
+          match_id?: string
+          player_id?: string
+          round?: number
+          symbol?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_moves_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      matches: {
+        Row: {
+          board: string
+          code: string
+          created_at: string
+          expires_at: string
+          guest_autopilot: boolean
+          guest_id: string | null
+          guest_rematch: boolean
+          guest_seen: string | null
+          host_autopilot: boolean
+          host_id: string
+          host_rematch: boolean
+          host_seen: string
+          host_symbol: string
+          id: string
+          result: string | null
+          round: number
+          status: string
+          turn: string
+          turn_deadline: string | null
+          updated_at: string
+          winner_id: string | null
+          winning_line: number[] | null
+        }
+        Insert: {
+          board?: string
+          code: string
+          created_at?: string
+          expires_at?: string
+          guest_autopilot?: boolean
+          guest_id?: string | null
+          guest_rematch?: boolean
+          guest_seen?: string | null
+          host_autopilot?: boolean
+          host_id: string
+          host_rematch?: boolean
+          host_seen?: string
+          host_symbol?: string
+          id?: string
+          result?: string | null
+          round?: number
+          status?: string
+          turn?: string
+          turn_deadline?: string | null
+          updated_at?: string
+          winner_id?: string | null
+          winning_line?: number[] | null
+        }
+        Update: {
+          board?: string
+          code?: string
+          created_at?: string
+          expires_at?: string
+          guest_autopilot?: boolean
+          guest_id?: string | null
+          guest_rematch?: boolean
+          guest_seen?: string | null
+          host_autopilot?: boolean
+          host_id?: string
+          host_rematch?: boolean
+          host_seen?: string
+          host_symbol?: string
+          id?: string
+          result?: string | null
+          round?: number
+          status?: string
+          turn?: string
+          turn_deadline?: string | null
+          updated_at?: string
+          winner_id?: string | null
+          winning_line?: number[] | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          appear_offline: boolean
+          avatar: string
+          created_at: string
+          draws: number
+          id: string
+          last_seen: string
+          losses: number
+          nickname: string
+          player_id: string
+          wins: number
+        }
+        Insert: {
+          appear_offline?: boolean
+          avatar?: string
+          created_at?: string
+          draws?: number
+          id: string
+          last_seen?: string
+          losses?: number
+          nickname: string
+          player_id: string
+          wins?: number
+        }
+        Update: {
+          appear_offline?: boolean
+          avatar?: string
+          created_at?: string
+          draws?: number
+          id?: string
+          last_seen?: string
+          losses?: number
+          nickname?: string
+          player_id?: string
+          wins?: number
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          dark_mode: boolean
+          music: boolean
+          sfx: boolean
+          theme: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          dark_mode?: boolean
+          music?: boolean
+          sfx?: boolean
+          theme?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          dark_mode?: boolean
+          music?: boolean
+          sfx?: boolean
+          theme?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +252,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      friend_status: "pending" | "accepted"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +379,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      friend_status: ["pending", "accepted"],
+    },
   },
 } as const
