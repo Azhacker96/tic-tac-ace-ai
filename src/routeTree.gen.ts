@@ -10,11 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as HomeRouteImport } from './routes/home'
 import { Route as SetupRouteImport } from './routes/setup'
+import { Route as OnlineIndexRouteImport } from './routes/online.index'
+import { Route as PlayComputerRouteImport } from './routes/play.computer'
+import { Route as PlayLocalRouteImport } from './routes/play.local'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SetupRoute = SetupRouteImport.update({
@@ -22,31 +31,70 @@ const SetupRoute = SetupRouteImport.update({
   path: '/setup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnlineIndexRoute = OnlineIndexRouteImport.update({
+  id: '/online/',
+  path: '/online/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlayComputerRoute = PlayComputerRouteImport.update({
+  id: '/play/computer',
+  path: '/play/computer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlayLocalRoute = PlayLocalRouteImport.update({
+  id: '/play/local',
+  path: '/play/local',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/home': typeof HomeRoute
   '/setup': typeof SetupRoute
+  '/play/computer': typeof PlayComputerRoute
+  '/play/local': typeof PlayLocalRoute
+  '/online/': typeof OnlineIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/home': typeof HomeRoute
   '/setup': typeof SetupRoute
+  '/play/computer': typeof PlayComputerRoute
+  '/play/local': typeof PlayLocalRoute
+  '/online': typeof OnlineIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/home': typeof HomeRoute
   '/setup': typeof SetupRoute
+  '/play/computer': typeof PlayComputerRoute
+  '/play/local': typeof PlayLocalRoute
+  '/online/': typeof OnlineIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/setup'
+  fullPaths:
+    '/' | '/home' | '/setup' | '/play/computer' | '/play/local' | '/online/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/setup'
-  id: '__root__' | '/' | '/setup'
+  to: '/' | '/home' | '/setup' | '/play/computer' | '/play/local' | '/online'
+  id:
+    | '__root__'
+    | '/'
+    | '/home'
+    | '/setup'
+    | '/play/computer'
+    | '/play/local'
+    | '/online/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HomeRoute: typeof HomeRoute
   SetupRoute: typeof SetupRoute
+  PlayComputerRoute: typeof PlayComputerRoute
+  PlayLocalRoute: typeof PlayLocalRoute
+  OnlineIndexRoute: typeof OnlineIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +106,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/setup': {
       id: '/setup'
       path: '/setup'
@@ -65,12 +120,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SetupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/online/': {
+      id: '/online/'
+      path: '/online'
+      fullPath: '/online/'
+      preLoaderRoute: typeof OnlineIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/play/computer': {
+      id: '/play/computer'
+      path: '/play/computer'
+      fullPath: '/play/computer'
+      preLoaderRoute: typeof PlayComputerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/play/local': {
+      id: '/play/local'
+      path: '/play/local'
+      fullPath: '/play/local'
+      preLoaderRoute: typeof PlayLocalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HomeRoute: HomeRoute,
   SetupRoute: SetupRoute,
+  PlayComputerRoute: PlayComputerRoute,
+  PlayLocalRoute: PlayLocalRoute,
+  OnlineIndexRoute: OnlineIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
