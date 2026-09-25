@@ -10,15 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FriendsRouteImport } from './routes/friends'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as SetupRouteImport } from './routes/setup'
 import { Route as OnlineIndexRouteImport } from './routes/online.index'
+import { Route as OnlineCodeRouteImport } from './routes/online.$code'
 import { Route as PlayComputerRouteImport } from './routes/play.computer'
 import { Route as PlayLocalRouteImport } from './routes/play.local'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FriendsRoute = FriendsRouteImport.update({
+  id: '/friends',
+  path: '/friends',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HomeRoute = HomeRouteImport.update({
@@ -36,6 +43,11 @@ const OnlineIndexRoute = OnlineIndexRouteImport.update({
   path: '/online/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnlineCodeRoute = OnlineCodeRouteImport.update({
+  id: '/online/$code',
+  path: '/online/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlayComputerRoute = PlayComputerRouteImport.update({
   id: '/play/computer',
   path: '/play/computer',
@@ -49,16 +61,20 @@ const PlayLocalRoute = PlayLocalRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/friends': typeof FriendsRoute
   '/home': typeof HomeRoute
   '/setup': typeof SetupRoute
+  '/online/$code': typeof OnlineCodeRoute
   '/play/computer': typeof PlayComputerRoute
   '/play/local': typeof PlayLocalRoute
   '/online/': typeof OnlineIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/friends': typeof FriendsRoute
   '/home': typeof HomeRoute
   '/setup': typeof SetupRoute
+  '/online/$code': typeof OnlineCodeRoute
   '/play/computer': typeof PlayComputerRoute
   '/play/local': typeof PlayLocalRoute
   '/online': typeof OnlineIndexRoute
@@ -66,8 +82,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/friends': typeof FriendsRoute
   '/home': typeof HomeRoute
   '/setup': typeof SetupRoute
+  '/online/$code': typeof OnlineCodeRoute
   '/play/computer': typeof PlayComputerRoute
   '/play/local': typeof PlayLocalRoute
   '/online/': typeof OnlineIndexRoute
@@ -75,14 +93,31 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/home' | '/setup' | '/play/computer' | '/play/local' | '/online/'
+    | '/'
+    | '/friends'
+    | '/home'
+    | '/setup'
+    | '/online/$code'
+    | '/play/computer'
+    | '/play/local'
+    | '/online/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/home' | '/setup' | '/play/computer' | '/play/local' | '/online'
+  to:
+    | '/'
+    | '/friends'
+    | '/home'
+    | '/setup'
+    | '/online/$code'
+    | '/play/computer'
+    | '/play/local'
+    | '/online'
   id:
     | '__root__'
     | '/'
+    | '/friends'
     | '/home'
     | '/setup'
+    | '/online/$code'
     | '/play/computer'
     | '/play/local'
     | '/online/'
@@ -90,8 +125,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FriendsRoute: typeof FriendsRoute
   HomeRoute: typeof HomeRoute
   SetupRoute: typeof SetupRoute
+  OnlineCodeRoute: typeof OnlineCodeRoute
   PlayComputerRoute: typeof PlayComputerRoute
   PlayLocalRoute: typeof PlayLocalRoute
   OnlineIndexRoute: typeof OnlineIndexRoute
@@ -104,6 +141,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/friends': {
+      id: '/friends'
+      path: '/friends'
+      fullPath: '/friends'
+      preLoaderRoute: typeof FriendsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/home': {
@@ -127,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnlineIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/online/$code': {
+      id: '/online/$code'
+      path: '/online/$code'
+      fullPath: '/online/$code'
+      preLoaderRoute: typeof OnlineCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/play/computer': {
       id: '/play/computer'
       path: '/play/computer'
@@ -146,8 +197,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FriendsRoute: FriendsRoute,
   HomeRoute: HomeRoute,
   SetupRoute: SetupRoute,
+  OnlineCodeRoute: OnlineCodeRoute,
   PlayComputerRoute: PlayComputerRoute,
   PlayLocalRoute: PlayLocalRoute,
   OnlineIndexRoute: OnlineIndexRoute,
