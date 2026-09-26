@@ -218,7 +218,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.rpc("ensure_profile", {
         p_nickname: nickname.trim(),
         p_avatar: avatar,
-        p_player_id: null,
       });
       if (error) throw error;
       if (session?.user) await fetchProfile(session.user.id);

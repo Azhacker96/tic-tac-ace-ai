@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils";
 interface PlayerChipProps {
   name: string;
   symbol: "X" | "O";
-  avatar?: string;
-  active?: boolean;
-  subtitle?: string;
-  badge?: string;
+  avatar?: string | undefined;
+  active?: boolean | undefined;
+  subtitle?: string | undefined;
+  badge?: string | undefined;
 }
 
 export function PlayerChip({
