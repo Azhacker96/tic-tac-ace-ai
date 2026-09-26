@@ -8,8 +8,8 @@ interface ResultSheetProps {
   open: boolean;
   outcome: Outcome;
   headline: string;
-  detail?: string;
-  stats?: { wins: number; losses: number; draws: number };
+  detail?: string | undefined;
+  stats?: { wins: number; losses: number; draws: number } | undefined;
   children?: ReactNode;
 }
 
