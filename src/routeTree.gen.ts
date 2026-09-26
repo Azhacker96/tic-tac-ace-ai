@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FriendsRouteImport } from './routes/friends'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SetupRouteImport } from './routes/setup'
 import { Route as OnlineIndexRouteImport } from './routes/online.index'
 import { Route as OnlineCodeRouteImport } from './routes/online.$code'
@@ -31,6 +33,16 @@ const FriendsRoute = FriendsRouteImport.update({
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SetupRoute = SetupRouteImport.update({
@@ -63,6 +75,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/friends': typeof FriendsRoute
   '/home': typeof HomeRoute
+  '/profile': typeof ProfileRoute
+  '/settings': typeof SettingsRoute
   '/setup': typeof SetupRoute
   '/online/$code': typeof OnlineCodeRoute
   '/play/computer': typeof PlayComputerRoute
@@ -73,6 +87,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/friends': typeof FriendsRoute
   '/home': typeof HomeRoute
+  '/profile': typeof ProfileRoute
+  '/settings': typeof SettingsRoute
   '/setup': typeof SetupRoute
   '/online/$code': typeof OnlineCodeRoute
   '/play/computer': typeof PlayComputerRoute
@@ -84,6 +100,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/friends': typeof FriendsRoute
   '/home': typeof HomeRoute
+  '/profile': typeof ProfileRoute
+  '/settings': typeof SettingsRoute
   '/setup': typeof SetupRoute
   '/online/$code': typeof OnlineCodeRoute
   '/play/computer': typeof PlayComputerRoute
@@ -96,6 +114,8 @@ export interface FileRouteTypes {
     | '/'
     | '/friends'
     | '/home'
+    | '/profile'
+    | '/settings'
     | '/setup'
     | '/online/$code'
     | '/play/computer'
@@ -106,6 +126,8 @@ export interface FileRouteTypes {
     | '/'
     | '/friends'
     | '/home'
+    | '/profile'
+    | '/settings'
     | '/setup'
     | '/online/$code'
     | '/play/computer'
@@ -116,6 +138,8 @@ export interface FileRouteTypes {
     | '/'
     | '/friends'
     | '/home'
+    | '/profile'
+    | '/settings'
     | '/setup'
     | '/online/$code'
     | '/play/computer'
@@ -127,6 +151,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   FriendsRoute: typeof FriendsRoute
   HomeRoute: typeof HomeRoute
+  ProfileRoute: typeof ProfileRoute
+  SettingsRoute: typeof SettingsRoute
   SetupRoute: typeof SetupRoute
   OnlineCodeRoute: typeof OnlineCodeRoute
   PlayComputerRoute: typeof PlayComputerRoute
@@ -155,6 +181,20 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/setup': {
@@ -199,6 +239,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   FriendsRoute: FriendsRoute,
   HomeRoute: HomeRoute,
+  ProfileRoute: ProfileRoute,
+  SettingsRoute: SettingsRoute,
   SetupRoute: SetupRoute,
   OnlineCodeRoute: OnlineCodeRoute,
   PlayComputerRoute: PlayComputerRoute,
