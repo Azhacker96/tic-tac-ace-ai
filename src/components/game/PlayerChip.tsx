@@ -1,4 +1,5 @@
-import { avatarEmoji } from "@/lib/avatars";
+import { AvatarGlyph } from "@/components/AvatarGlyph";
+
 import { cn } from "@/lib/utils";
 
 interface PlayerChipProps {
@@ -27,8 +28,8 @@ export function PlayerChip({
           : "border-border bg-surface opacity-80",
       )}
     >
-      <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-background text-lg">
-        {avatar ? avatarEmoji(avatar) : symbol === "X" ? "✕" : "◯"}
+      <div className="flex size-9 shrink-0 overflow-hidden items-center justify-center rounded-xl bg-background text-lg">
+        {avatar ? <AvatarGlyph avatar={avatar} /> : symbol === "X" ? "✕" : "◯"}
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold">{name}</p>

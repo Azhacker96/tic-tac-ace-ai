@@ -1,10 +1,11 @@
+import { AvatarGlyph } from "@/components/AvatarGlyph";
 import { createFileRoute } from "@tanstack/react-router";
 import { Ban, Check, Loader2, Search, UserMinus, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { EmptyState, RequiresGoogle, Screen } from "@/components/Screen";
-import { avatarEmoji } from "@/lib/avatars";
+
 import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/lib/app-context";
 import { cn } from "@/lib/utils";
@@ -215,7 +216,7 @@ function Friends() {
             {accepted.map((f) => (
               <li key={f.friendship_id} className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3">
                 <span className="relative flex size-10 items-center justify-center rounded-xl bg-background text-xl">
-                  {avatarEmoji(f.avatar)}
+                  <AvatarGlyph avatar={f.avatar} />
                   <span
                     className={cn(
                       "absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-surface",
@@ -259,7 +260,7 @@ function Friends() {
             {requests.map((f) => (
               <li key={f.friendship_id} className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3">
                 <span className="flex size-10 items-center justify-center rounded-xl bg-background text-xl">
-                  {avatarEmoji(f.avatar)}
+                  <AvatarGlyph avatar={f.avatar} />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-semibold">{f.nickname}</p>
@@ -309,7 +310,7 @@ function Friends() {
             {blocked.map((b) => (
               <li key={b.user_id} className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3">
                 <span className="flex size-10 items-center justify-center rounded-xl bg-background text-xl">
-                  {avatarEmoji(b.avatar)}
+                  <AvatarGlyph avatar={b.avatar} />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-semibold">{b.nickname}</p>

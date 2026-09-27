@@ -1,10 +1,11 @@
+import { AvatarGlyph } from "@/components/AvatarGlyph";
 import { createFileRoute } from "@tanstack/react-router";
 import { Copy, Pencil } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { LoadingScreen, Screen } from "@/components/Screen";
-import { AVATARS, avatarEmoji } from "@/lib/avatars";
+import { AVATARS } from "@/lib/avatars";
 import { useApp } from "@/lib/app-context";
 import { cn } from "@/lib/utils";
 import { friendlyError, validateNickname } from "@/lib/validation";
@@ -79,7 +80,7 @@ function Profile() {
     <Screen title="Profile">
       <div className="rounded-3xl border border-border bg-surface p-5 text-center">
         <div className="mx-auto flex size-20 items-center justify-center rounded-3xl bg-background text-4xl">
-          {avatarEmoji(identity.avatar)}
+          <AvatarGlyph avatar={identity.avatar} />
         </div>
         <h2 className="mt-3 font-display text-xl">{identity.nickname}</h2>
         <button
