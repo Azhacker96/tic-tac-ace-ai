@@ -182,6 +182,8 @@ export type Database = {
         Row: {
           appear_offline: boolean
           avatar: string
+          avatar_type: string
+          avatar_url: string | null
           created_at: string
           draws: number
           id: string
@@ -194,6 +196,8 @@ export type Database = {
         Insert: {
           appear_offline?: boolean
           avatar?: string
+          avatar_type?: string
+          avatar_url?: string | null
           created_at?: string
           draws?: number
           id: string
@@ -206,6 +210,8 @@ export type Database = {
         Update: {
           appear_offline?: boolean
           avatar?: string
+          avatar_type?: string
+          avatar_url?: string | null
           created_at?: string
           draws?: number
           id?: string
@@ -354,6 +360,8 @@ export type Database = {
         Returns: {
           appear_offline: boolean
           avatar: string
+          avatar_type: string
+          avatar_url: string | null
           created_at: string
           draws: number
           id: string
@@ -511,6 +519,8 @@ export type Database = {
         Returns: {
           appear_offline: boolean
           avatar: string
+          avatar_type: string
+          avatar_url: string | null
           created_at: string
           draws: number
           id: string
@@ -527,11 +537,17 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      profile_avatar: {
+        Args: { p_avatar: string; p_type: string; p_url: string }
+        Returns: string
+      }
       record_game_result: {
         Args: { p_result: string }
         Returns: {
           appear_offline: boolean
           avatar: string
+          avatar_type: string
+          avatar_url: string | null
           created_at: string
           draws: number
           id: string
