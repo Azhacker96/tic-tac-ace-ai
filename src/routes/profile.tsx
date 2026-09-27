@@ -31,6 +31,7 @@ function Profile() {
   const [editing, setEditing] = useState(false);
   const [nickname, setNickname] = useState("");
   const [avatar, setAvatar] = useState<string>("fox");
+  const [avatarType, setAvatarType] = useState<"app" | "google">("app");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,10 +42,12 @@ function Profile() {
   const played = stats.wins + stats.losses + stats.draws;
   const winRate = played ? Math.round((stats.wins / played) * 100) : 0;
   const isGuest = identity.kind === "guest";
+  const isGoogleWithPicture = identity.kind === "google" && Boolean(identity.googleAvatarUrl);
 
   const startEdit = () => {
     setNickname(identity.nickname);
-    setAvatar(identity.avatar);
+    setAvatar(identity.appAvatar);
+    setAvatarType(identity.avatarType);
     setError(null);
     setEditing(true);
   };
@@ -57,7 +60,11 @@ function Profile() {
     }
     setBusy(true);
     try {
-      await updateProfile({ nickname: nickname.trim(), avatar });
+      await updateProfile({
+        nickname: nickname.trim(),
+        avatar,
+        ...(isGoogleWithPicture ? { avatar_type: avatarType } : {}),
+      });
       toast.success("Profile updated");
       setEditing(false);
     } catch (e) {
@@ -79,8 +86,8 @@ function Profile() {
   return (
     <Screen title="Profile">
       <div className="rounded-3xl border border-border bg-surface p-5 text-center">
-        <div className="mx-auto flex size-20 items-center justify-center rounded-3xl bg-background text-4xl">
-          <AvatarGlyph avatar={identity.avatar} />
+        <div className="mx-auto flex size-20 overflow-hidden items-center justify-center rounded-3xl bg-background text-4xl">
+          <AvatarGlyph avatar={identity.avatar} fallback={identity.appAvatar} />
         </div>
         <h2 className="mt-3 font-display text-xl">{identity.nickname}</h2>
         <button
@@ -174,12 +181,40 @@ function Profile() {
             <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Avatar
             </p>
-            <div className="mt-2 grid grid-cols-6 gap-2">
+            {isGoogleWithPicture ? (
+              <div className="mt-2 grid grid-cols-2 gap-2" role="radiogroup" aria-label="Avatar source">
+                {([
+                  { id: "google", label: "Use Google profile picture" },
+                  { id: "app", label: "Use app avatar" },
+                ] as const).map((o) => (
+                  <button
+                    key={o.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={avatarType === o.id}
+                    onClick={() => setAvatarType(o.id)}
+                    className={cn(
+                      "flex items-center gap-2 rounded-xl border p-2 text-left text-xs font-semibold active:scale-95",
+                      avatarType === o.id ? "border-primary bg-primary/15" : "border-border bg-background",
+                    )}
+                  >
+                    <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface text-lg">
+                      <AvatarGlyph avatar={o.id === "google" ? identity.googleAvatarUrl : avatar} fallback={avatar} />
+                    </span>
+                    {o.label}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+            <div className={cn("mt-2 grid grid-cols-6 gap-2", isGoogleWithPicture && avatarType === "google" && "opacity-50")}>
               {AVATARS.map((a) => (
                 <button
                   key={a.id}
                   type="button"
-                  onClick={() => setAvatar(a.id)}
+                  onClick={() => {
+                    setAvatar(a.id);
+                    setAvatarType("app");
+                  }}
                   aria-label={a.id}
                   className={cn(
                     "flex aspect-square items-center justify-center rounded-xl border text-xl active:scale-95",
