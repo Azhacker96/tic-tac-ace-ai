@@ -41,6 +41,8 @@ export interface DbProfile {
   losses: number;
   draws: number;
   appear_offline: boolean;
+  avatar_type: "app" | "google";
+  avatar_url: string | null;
 }
 
 export type AccountKind = "none" | "guest" | "google";
@@ -50,7 +52,12 @@ export interface Identity {
   userId: string | null;
   playerId: string;
   nickname: string;
+  /** Effective avatar: an app avatar id, or a Google picture https URL. */
   avatar: string;
+  /** Always the app avatar id (fallback when the picture fails). */
+  appAvatar: string;
+  avatarType: "app" | "google";
+  googleAvatarUrl: string | null;
   stats: LocalStats;
 }
 
@@ -67,7 +74,7 @@ interface AppState {
   signInWithGoogle: () => Promise<{ error?: string; redirected?: boolean }>;
   createGuest: (nickname: string, avatar: string) => void;
   completeProfile: (nickname: string, avatar: string) => Promise<void>;
-  updateProfile: (patch: { nickname?: string; avatar?: string }) => Promise<void>;
+  updateProfile: (patch: { nickname?: string; avatar?: string; avatar_type?: "app" | "google" }) => Promise<void>;
   setAppearOffline: (value: boolean) => Promise<void>;
   updateSettings: (patch: Partial<AppSettings>) => void;
   setTheme: (theme: ThemeId) => void;
@@ -112,7 +119,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const fetchProfile = useCallback(async (userId: string) => {
     const { data } = await supabase
       .from("profiles")
-      .select("id, player_id, nickname, avatar, wins, losses, draws, appear_offline")
+      .select("id, player_id, nickname, avatar, avatar_type, avatar_url, wins, losses, draws, appear_offline")
       .eq("id", userId)
       .maybeSingle();
     setProfile((data as DbProfile | null) ?? null);
@@ -152,7 +159,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     void fetchProfile(session.user.id).then(async (existing) => {
       // A guest who just linked Google keeps their nickname, ID and stats.
       const pending = linkingGuest.current ?? loadGuest();
-      if (!existing && pending) {
+      if (existing) {
+        // Returning user: same profile; refresh their Google picture.
+        const { error } = await supabase.rpc("ensure_profile", {});
+        if (!error) await fetchProfile(session.user.id);
+      } else if (pending) {
         const localStats = loadStats();
         const { data, error } = await supabase.rpc("ensure_profile", {
           p_nickname: pending.nickname,
@@ -226,7 +237,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   );
 
   const updateProfile = useCallback(
-    async (patch: { nickname?: string; avatar?: string }) => {
+    async (patch: { nickname?: string; avatar?: string; avatar_type?: "app" | "google" }) => {
       if (session?.user && profile) {
         const { error } = await supabase
           .from("profiles")
@@ -238,7 +249,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
       const current = loadGuest();
       if (current) {
-        const next = { ...current, ...patch };
+        const { avatar_type: _ignored, ...guestPatch } = patch;
+        const next = { ...current, ...guestPatch };
         saveGuest(next);
         setGuest(next);
       }
@@ -304,7 +316,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         userId: profile.id,
         playerId: profile.player_id,
         nickname: profile.nickname,
-        avatar: profile.avatar,
+        avatar: profile.avatar_type === "google" && profile.avatar_url ? profile.avatar_url : profile.avatar,
+        appAvatar: profile.avatar,
+        avatarType: profile.avatar_type === "google" && profile.avatar_url ? "google" : "app",
+        googleAvatarUrl: profile.avatar_url,
         stats: { wins: profile.wins, losses: profile.losses, draws: profile.draws },
       };
     }
@@ -315,6 +330,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
         playerId: guest.playerId,
         nickname: guest.nickname,
         avatar: guest.avatar,
+        appAvatar: guest.avatar,
+        avatarType: "app",
+        googleAvatarUrl: null,
         stats,
       };
     }
@@ -325,6 +343,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
         playerId: guest.playerId,
         nickname: guest.nickname,
         avatar: guest.avatar,
+        appAvatar: guest.avatar,
+        avatarType: "app",
+        googleAvatarUrl: null,
         stats,
       };
     }

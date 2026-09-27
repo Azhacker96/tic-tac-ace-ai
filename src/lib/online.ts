@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { effectiveAvatar } from "@/lib/avatars";
 
 export interface MatchRow {
   id: string;
@@ -49,11 +50,19 @@ export async function fetchProfiles(ids: string[]): Promise<Record<string, Publi
   if (unique.length === 0) return {};
   const { data } = await supabase
     .from("profiles")
-    .select("id, player_id, nickname, avatar, wins, losses, draws")
+    .select("id, player_id, nickname, avatar, avatar_type, avatar_url, wins, losses, draws")
     .in("id", unique);
   const out: Record<string, PublicProfile> = {};
-  (data as PublicProfile[] | null)?.forEach((p) => {
-    out[p.id] = p;
+  data?.forEach((p) => {
+    out[p.id] = {
+      id: p.id,
+      player_id: p.player_id,
+      nickname: p.nickname,
+      avatar: effectiveAvatar(p),
+      wins: p.wins,
+      losses: p.losses,
+      draws: p.draws,
+    };
   });
   return out;
 }

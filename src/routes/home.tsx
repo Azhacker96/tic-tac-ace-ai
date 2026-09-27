@@ -1,3 +1,4 @@
+import { AvatarGlyph } from "@/components/AvatarGlyph";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   Bot,
@@ -11,7 +12,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import { LoadingScreen } from "@/components/Screen";
-import { avatarEmoji } from "@/lib/avatars";
+
 import { useApp } from "@/lib/app-context";
 import { cn } from "@/lib/utils";
 
@@ -82,9 +83,9 @@ function Home() {
       <header className="flex items-center gap-3 pb-5">
         <Link
           to="/profile"
-          className="flex size-14 items-center justify-center rounded-2xl border border-border bg-surface text-2xl active:scale-95"
+          className="flex size-14 overflow-hidden items-center justify-center rounded-2xl border border-border bg-surface text-2xl active:scale-95"
         >
-          {avatarEmoji(identity.avatar)}
+          <AvatarGlyph avatar={identity.avatar} fallback={identity.appAvatar} />
         </Link>
         <div className="min-w-0 flex-1">
           <p className="truncate font-display text-lg leading-tight">{identity.nickname}</p>
