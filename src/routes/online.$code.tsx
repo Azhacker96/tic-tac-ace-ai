@@ -3,6 +3,7 @@ import { Copy, Loader2, Plane, Share2, UserPlus, WifiOff } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import { AvatarGlyph } from "@/components/AvatarGlyph";
 import { EmptyState, LoadingScreen, RequiresGoogle, Screen } from "@/components/Screen";
 import { GameBoard } from "@/components/game/Board";
 import { PlayerChip } from "@/components/game/PlayerChip";
@@ -512,6 +513,17 @@ function OnlineMatch() {
         }
         stats={identity?.stats}
       >
+        {opp ? (
+          <div className="flex items-center gap-3 rounded-2xl border border-border bg-background p-3">
+            <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface text-xl">
+              <AvatarGlyph avatar={opp.avatar} />
+            </span>
+            <div className="min-w-0 flex-1 text-left">
+              <p className="truncate font-semibold">{opp.nickname}</p>
+              <p className="truncate text-[11px] text-muted-foreground">ID {opp.player_id}</p>
+            </div>
+          </div>
+        ) : null}
         <button
           type="button"
           onClick={rematch}
