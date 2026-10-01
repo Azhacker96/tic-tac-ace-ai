@@ -22,6 +22,13 @@
       "when": 1790488163288,
       "tag": "0002_fix_match_code_and_google_avatar",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790837526655,
+      "tag": "0003_coins_shop_invites",
+      "breakpoints": true
     }
   ]
 }
