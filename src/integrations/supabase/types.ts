@@ -35,6 +35,87 @@ export type Database = {
         }
         Relationships: []
       }
+      coin_config: {
+        Row: {
+          description: string | null
+          key: string
+          value: number
+        }
+        Insert: {
+          description?: string | null
+          key: string
+          value: number
+        }
+        Update: {
+          description?: string | null
+          key?: string
+          value?: number
+        }
+        Relationships: []
+      }
+      coin_transactions: {
+        Row: {
+          amount: number
+          balance_after: number
+          created_at: string
+          id: string
+          reference: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          balance_after: number
+          created_at?: string
+          id?: string
+          reference?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          balance_after?: number
+          created_at?: string
+          id?: string
+          reference?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      coin_wallets: {
+        Row: {
+          balance: number
+          created_at: string
+          earned: number
+          last_daily_claim: string | null
+          last_weekly_claim: string | null
+          spent: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          earned?: number
+          last_daily_claim?: string | null
+          last_weekly_claim?: string | null
+          spent?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          earned?: number
+          last_daily_claim?: string | null
+          last_weekly_claim?: string | null
+          spent?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       friendships: {
         Row: {
           addressee_id: string
@@ -61,6 +142,44 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      match_invites: {
+        Row: {
+          code: string
+          created_at: string
+          from_id: string
+          id: string
+          match_id: string
+          status: string
+          to_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          from_id: string
+          id?: string
+          match_id: string
+          status?: string
+          to_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          from_id?: string
+          id?: string
+          match_id?: string
+          status?: string
+          to_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_invites_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       match_moves: {
         Row: {
@@ -223,6 +342,68 @@ export type Database = {
         }
         Relationships: []
       }
+      shop_items: {
+        Row: {
+          active: boolean
+          category: string
+          created_at: string
+          id: string
+          name: string
+          preview: string
+          price: number
+          sort: number
+        }
+        Insert: {
+          active?: boolean
+          category: string
+          created_at?: string
+          id: string
+          name: string
+          preview: string
+          price: number
+          sort?: number
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          id?: string
+          name?: string
+          preview?: string
+          price?: number
+          sort?: number
+        }
+        Relationships: []
+      }
+      user_inventory: {
+        Row: {
+          equipped: boolean
+          item_id: string
+          purchased_at: string
+          user_id: string
+        }
+        Insert: {
+          equipped?: boolean
+          item_id: string
+          purchased_at?: string
+          user_id: string
+        }
+        Update: {
+          equipped?: boolean
+          item_id?: string
+          purchased_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_inventory_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "shop_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_settings: {
         Row: {
           dark_mode: boolean
@@ -289,6 +470,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      claim_bonus: { Args: { p_kind: string }; Returns: Json }
       claim_timeout: {
         Args: { p_code: string }
         Returns: {
@@ -321,6 +503,27 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      coin_apply: {
+        Args: {
+          p_amount: number
+          p_ref: string
+          p_type: string
+          p_user: string
+        }
+        Returns: number
+      }
+      coin_cfg: { Args: { p_key: string }; Returns: number }
+      coin_ensure_wallet: { Args: { p_user: string }; Returns: undefined }
+      coin_game_result: {
+        Args: {
+          p_draw: boolean
+          p_loser: string
+          p_match: string
+          p_round: number
+          p_winner: string
+        }
+        Returns: undefined
       }
       create_match: {
         Args: { p_symbol?: string }
@@ -378,6 +581,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      equip_item: {
+        Args: { p_item: string; p_on: boolean }
+        Returns: undefined
+      }
       find_player: {
         Args: { p_player_id: string }
         Returns: {
@@ -388,7 +595,41 @@ export type Database = {
         }[]
       }
       generate_player_id: { Args: never; Returns: string }
+      get_wallet: { Args: never; Returns: Json }
       heartbeat: { Args: never; Returns: undefined }
+      invite_friend: {
+        Args: { p_user_id: string }
+        Returns: {
+          board: string
+          code: string
+          created_at: string
+          expires_at: string
+          guest_autopilot: boolean
+          guest_id: string | null
+          guest_rematch: boolean
+          guest_seen: string | null
+          host_autopilot: boolean
+          host_id: string
+          host_rematch: boolean
+          host_seen: string
+          host_symbol: string
+          id: string
+          result: string | null
+          round: number
+          status: string
+          turn: string
+          turn_deadline: string | null
+          updated_at: string
+          winner_id: string | null
+          winning_line: number[] | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       join_match: {
         Args: { p_code: string }
         Returns: {
@@ -446,6 +687,17 @@ export type Database = {
           status: string
           user_id: string
           wins: number
+        }[]
+      }
+      list_invites: {
+        Args: never
+        Returns: {
+          avatar: string
+          code: string
+          created_at: string
+          from_user: string
+          invite_id: string
+          nickname: string
         }[]
       }
       make_move: {
@@ -541,6 +793,7 @@ export type Database = {
         Args: { p_avatar: string; p_type: string; p_url: string }
         Returns: string
       }
+      purchase_item: { Args: { p_item: string }; Returns: Json }
       record_game_result: {
         Args: { p_result: string }
         Returns: {
@@ -566,6 +819,39 @@ export type Database = {
       }
       request_rematch: {
         Args: { p_code: string }
+        Returns: {
+          board: string
+          code: string
+          created_at: string
+          expires_at: string
+          guest_autopilot: boolean
+          guest_id: string | null
+          guest_rematch: boolean
+          guest_seen: string | null
+          host_autopilot: boolean
+          host_id: string
+          host_rematch: boolean
+          host_seen: string
+          host_symbol: string
+          id: string
+          result: string | null
+          round: number
+          status: string
+          turn: string
+          turn_deadline: string | null
+          updated_at: string
+          winner_id: string | null
+          winning_line: number[] | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      respond_invite: {
+        Args: { p_accept: boolean; p_invite: string }
         Returns: {
           board: string
           code: string
@@ -674,6 +960,7 @@ export type Database = {
         }
       }
       ttt_lines: { Args: never; Returns: number[][] }
+      wallet_json: { Args: { p_user: string }; Returns: Json }
     }
     Enums: {
       friend_status: "pending" | "accepted"
