@@ -10,11 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CoinsRouteImport } from './routes/coins'
 import { Route as FriendsRouteImport } from './routes/friends'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SetupRouteImport } from './routes/setup'
+import { Route as ShopRouteImport } from './routes/shop'
 import { Route as OnlineIndexRouteImport } from './routes/online.index'
 import { Route as OnlineCodeRouteImport } from './routes/online.$code'
 import { Route as PlayComputerRouteImport } from './routes/play.computer'
@@ -23,6 +25,11 @@ import { Route as PlayLocalRouteImport } from './routes/play.local'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoinsRoute = CoinsRouteImport.update({
+  id: '/coins',
+  path: '/coins',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FriendsRoute = FriendsRouteImport.update({
@@ -50,6 +57,11 @@ const SetupRoute = SetupRouteImport.update({
   path: '/setup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnlineIndexRoute = OnlineIndexRouteImport.update({
   id: '/online/',
   path: '/online/',
@@ -73,11 +85,13 @@ const PlayLocalRoute = PlayLocalRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/coins': typeof CoinsRoute
   '/friends': typeof FriendsRoute
   '/home': typeof HomeRoute
   '/profile': typeof ProfileRoute
   '/settings': typeof SettingsRoute
   '/setup': typeof SetupRoute
+  '/shop': typeof ShopRoute
   '/online/$code': typeof OnlineCodeRoute
   '/play/computer': typeof PlayComputerRoute
   '/play/local': typeof PlayLocalRoute
@@ -85,11 +99,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/coins': typeof CoinsRoute
   '/friends': typeof FriendsRoute
   '/home': typeof HomeRoute
   '/profile': typeof ProfileRoute
   '/settings': typeof SettingsRoute
   '/setup': typeof SetupRoute
+  '/shop': typeof ShopRoute
   '/online/$code': typeof OnlineCodeRoute
   '/play/computer': typeof PlayComputerRoute
   '/play/local': typeof PlayLocalRoute
@@ -98,11 +114,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/coins': typeof CoinsRoute
   '/friends': typeof FriendsRoute
   '/home': typeof HomeRoute
   '/profile': typeof ProfileRoute
   '/settings': typeof SettingsRoute
   '/setup': typeof SetupRoute
+  '/shop': typeof ShopRoute
   '/online/$code': typeof OnlineCodeRoute
   '/play/computer': typeof PlayComputerRoute
   '/play/local': typeof PlayLocalRoute
@@ -112,11 +130,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/coins'
     | '/friends'
     | '/home'
     | '/profile'
     | '/settings'
     | '/setup'
+    | '/shop'
     | '/online/$code'
     | '/play/computer'
     | '/play/local'
@@ -124,11 +144,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/coins'
     | '/friends'
     | '/home'
     | '/profile'
     | '/settings'
     | '/setup'
+    | '/shop'
     | '/online/$code'
     | '/play/computer'
     | '/play/local'
@@ -136,11 +158,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/coins'
     | '/friends'
     | '/home'
     | '/profile'
     | '/settings'
     | '/setup'
+    | '/shop'
     | '/online/$code'
     | '/play/computer'
     | '/play/local'
@@ -149,11 +173,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CoinsRoute: typeof CoinsRoute
   FriendsRoute: typeof FriendsRoute
   HomeRoute: typeof HomeRoute
   ProfileRoute: typeof ProfileRoute
   SettingsRoute: typeof SettingsRoute
   SetupRoute: typeof SetupRoute
+  ShopRoute: typeof ShopRoute
   OnlineCodeRoute: typeof OnlineCodeRoute
   PlayComputerRoute: typeof PlayComputerRoute
   PlayLocalRoute: typeof PlayLocalRoute
@@ -167,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coins': {
+      id: '/coins'
+      path: '/coins'
+      fullPath: '/coins'
+      preLoaderRoute: typeof CoinsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/friends': {
@@ -204,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SetupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/online/': {
       id: '/online/'
       path: '/online'
@@ -237,11 +277,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CoinsRoute: CoinsRoute,
   FriendsRoute: FriendsRoute,
   HomeRoute: HomeRoute,
   ProfileRoute: ProfileRoute,
   SettingsRoute: SettingsRoute,
   SetupRoute: SetupRoute,
+  ShopRoute: ShopRoute,
   OnlineCodeRoute: OnlineCodeRoute,
   PlayComputerRoute: PlayComputerRoute,
   PlayLocalRoute: PlayLocalRoute,
