@@ -13,10 +13,18 @@ export const AVATARS = [
   { id: "penguin", emoji: "🐧" },
 ] as const;
 
+/** Shop avatars (ids match shop_items). Owning one is enforced by the server. */
+export const PREMIUM_AVATARS = [
+  { id: "avatar_lion", emoji: "🦁" },
+  { id: "avatar_wizard", emoji: "🧙" },
+  { id: "avatar_octopus", emoji: "🐙" },
+  { id: "avatar_crown", emoji: "👑" },
+] as const;
+
 export type AvatarId = (typeof AVATARS)[number]["id"];
 
 export function avatarEmoji(id: string | null | undefined): string {
-  return AVATARS.find((a) => a.id === id)?.emoji ?? "🎮";
+  return AVATARS.find((a) => a.id === id)?.emoji ?? PREMIUM_AVATARS.find((a) => a.id === id)?.emoji ?? "🎮";
 }
 
 /** Google profile pictures are passed around as https URLs in the same `avatar` slot. */
