@@ -1,6 +1,8 @@
 import { AvatarGlyph } from "@/components/AvatarGlyph";
 import { createFileRoute } from "@tanstack/react-router";
-import { Ban, Check, Loader2, Search, UserMinus, X } from "lucide-react";
+import { Ban, Check, Gamepad2, Loader2, Search, UserMinus, X } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { InviteBanner } from "@/components/InviteBanner";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -57,6 +59,8 @@ function Friends() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [searching, setSearching] = useState(false);
+  const [inviting, setInviting] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const isGoogle = identity?.kind === "google";
 
@@ -117,6 +121,19 @@ function Friends() {
     await load();
   };
 
+  const invite = async (f: FriendRow) => {
+    setInviting(f.user_id);
+    const { data, error: e } = await supabase.rpc("invite_friend", { p_user_id: f.user_id });
+    setInviting(null);
+    if (e || !data) {
+      toast.error(friendlyError(e, "Couldn't send the invite"));
+      return;
+    }
+    const m = data as unknown as { code: string };
+    toast.success(`Invite sent to ${f.nickname}`);
+    void navigate({ to: "/online/$code", params: { code: m.code } });
+  };
+
   const removeFriend = async (id: string) => {
     const { error: e } = await supabase.from("friendships").delete().eq("id", id);
     if (e) toast.error(friendlyError(e));
@@ -168,6 +185,10 @@ function Friends() {
         >
           {searching ? <Loader2 className="size-4 animate-spin" /> : "Add"}
         </button>
+      </div>
+
+      <div className="mt-4">
+        <InviteBanner />
       </div>
 
       <div className="my-4 grid grid-cols-3 gap-2 rounded-2xl border border-border bg-surface p-1.5">
@@ -230,6 +251,16 @@ function Friends() {
                     ID {f.player_id} · {f.online ? "Online" : "Offline"} · {f.wins}W {f.losses}L
                   </p>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => invite(f)}
+                  disabled={inviting !== null}
+                  aria-label={`Invite ${f.nickname} to play`}
+                  className="flex h-9 items-center gap-1 rounded-xl bg-primary px-3 text-xs font-semibold text-primary-foreground disabled:opacity-60"
+                >
+                  {inviting === f.user_id ? <Loader2 className="size-4 animate-spin" /> : <Gamepad2 className="size-4" />}
+                  Play
+                </button>
                 <button
                   type="button"
                   onClick={() => removeFriend(f.friendship_id)}
@@ -330,7 +361,7 @@ function Friends() {
       ) : null}
 
       <p className="mt-6 text-center text-xs text-muted-foreground">
-        Invite an online friend by sharing your match code from Online Multiplayer.
+        Tap Play next to a friend to send a one-tap match invite.
       </p>
     </Screen>
   );

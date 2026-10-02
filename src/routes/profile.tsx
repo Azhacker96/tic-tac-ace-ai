@@ -6,6 +6,10 @@ import { toast } from "sonner";
 
 import { LoadingScreen, Screen } from "@/components/Screen";
 import { AVATARS } from "@/lib/avatars";
+import { CoinBadge } from "@/components/CoinBadge";
+import { useEquipped } from "@/lib/coins";
+import { frameStyle } from "@/lib/cosmetics";
+import { Link } from "@tanstack/react-router";
 import { useApp } from "@/lib/app-context";
 import { cn } from "@/lib/utils";
 import { friendlyError, validateNickname } from "@/lib/validation";
@@ -30,6 +34,7 @@ function Profile() {
   const { ready, identity, updateProfile, signInWithGoogle, online } = useApp();
   const [editing, setEditing] = useState(false);
   const [nickname, setNickname] = useState("");
+  const equipped = useEquipped();
   const [avatar, setAvatar] = useState<string>("fox");
   const [avatarType, setAvatarType] = useState<"app" | "google">("app");
   const [busy, setBusy] = useState(false);
@@ -86,9 +91,15 @@ function Profile() {
   return (
     <Screen title="Profile">
       <div className="rounded-3xl border border-border bg-surface p-5 text-center">
-        <div className="mx-auto flex size-20 overflow-hidden items-center justify-center rounded-3xl bg-background text-4xl">
+        <div style={frameStyle(equipped.frame)} className="mx-auto flex size-20 overflow-hidden items-center justify-center rounded-3xl bg-background text-4xl">
           <AvatarGlyph avatar={identity.avatar} fallback={identity.appAvatar} />
         </div>
+        {identity.kind === "google" ? (
+          <div className="mt-3 flex justify-center gap-2">
+            <CoinBadge />
+            <Link to="/shop" className="rounded-xl border border-border bg-surface px-3 py-2 text-sm font-semibold">Shop</Link>
+          </div>
+        ) : null}
         <h2 className="mt-3 font-display text-xl">{identity.nickname}</h2>
         <button
           type="button"

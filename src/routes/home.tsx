@@ -8,7 +8,13 @@ import {
   UserRound,
   UsersRound,
   ChevronRight,
+  Gift,
+  ShoppingBag,
 } from "lucide-react";
+import { CoinBadge } from "@/components/CoinBadge";
+import { InviteBanner } from "@/components/InviteBanner";
+import { useEquipped } from "@/lib/coins";
+import { frameStyle } from "@/lib/cosmetics";
 import { useEffect, type ReactNode } from "react";
 
 import { LoadingScreen } from "@/components/Screen";
@@ -64,6 +70,7 @@ function ModeTile({
 function Home() {
   const { ready, identity, needsSetup } = useApp();
   const navigate = useNavigate();
+  const equipped = useEquipped();
 
   useEffect(() => {
     if (!ready) return;
@@ -83,6 +90,7 @@ function Home() {
       <header className="flex items-center gap-3 pb-5">
         <Link
           to="/profile"
+          style={frameStyle(equipped.frame)}
           className="flex size-14 overflow-hidden items-center justify-center rounded-2xl border border-border bg-surface text-2xl active:scale-95"
         >
           <AvatarGlyph avatar={identity.avatar} fallback={identity.appAvatar} />
@@ -96,6 +104,7 @@ function Home() {
             </span>
           </p>
         </div>
+        {!isGuest ? <CoinBadge /> : null}
         <Link
           to="/settings"
           aria-label="Settings"
@@ -120,6 +129,8 @@ function Home() {
           </div>
         ))}
       </div>
+
+      {!isGuest ? <InviteBanner /> : null}
 
       <div className="grid gap-2.5">
         <ModeTile
@@ -146,6 +157,20 @@ function Home() {
           icon={<UsersRound className="size-5" />}
           title="Friends"
           description="Add by Player ID and invite to play"
+          locked={isGuest}
+        />
+        <ModeTile
+          to="/shop"
+          icon={<ShoppingBag className="size-5" />}
+          title="Shop"
+          description="Board skins, X/O skins, avatars, frames"
+          locked={isGuest}
+        />
+        <ModeTile
+          to="/coins"
+          icon={<Gift className="size-5" />}
+          title="Rewards & Coins"
+          description="Daily and weekly bonus, coin history"
           locked={isGuest}
         />
         <ModeTile
