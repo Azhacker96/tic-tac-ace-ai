@@ -29,6 +29,13 @@
       "when": 1790837526655,
       "tag": "0003_coins_shop_invites",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790950925147,
+      "tag": "0004_coins_lock_writes",
+      "breakpoints": true
     }
   ]
 }

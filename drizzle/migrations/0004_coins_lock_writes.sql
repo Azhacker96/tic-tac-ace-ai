@@ -1,0 +1,1 @@
+REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public.coin_wallets, public.coin_transactions, public.shop_items, public.user_inventory, public.coin_config, public.match_invites FROM authenticated, anon;
