@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { AvatarGlyph } from "@/components/AvatarGlyph";
 import { EmptyState, LoadingScreen, RequiresGoogle, Screen } from "@/components/Screen";
 import { GameBoard } from "@/components/game/Board";
+import { useRefreshCoins } from "@/lib/coins";
 import { PlayerChip } from "@/components/game/PlayerChip";
 import { ResultSheet, type Outcome } from "@/components/game/ResultSheet";
 import { supabase } from "@/integrations/supabase/client";
@@ -51,6 +52,7 @@ const TURN_SECONDS = 20;
 function OnlineMatch() {
   const { code } = useParams({ from: "/online/$code" });
   const { identity, session, online, refreshProfile } = useApp();
+  const refreshCoins = useRefreshCoins();
   const navigate = useNavigate();
 
   const [match, setMatch] = useState<MatchRow | null>(null);
@@ -158,10 +160,11 @@ function OnlineMatch() {
     if (statsSynced.current === key) return;
     statsSynced.current = key;
     void refreshProfile();
+    void refreshCoins();
     if (match.result === "draw") sfx.draw();
     else if (match.winner_id === userId) sfx.win();
     else sfx.lose();
-  }, [match, refreshProfile, userId]);
+  }, [match, refreshProfile, refreshCoins, userId]);
 
   const symbol = match && userId ? mySymbol(match, userId) : "X";
   const myTurn = Boolean(match && match.status === "active" && match.turn === symbol);

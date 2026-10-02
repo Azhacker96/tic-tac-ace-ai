@@ -1,3 +1,5 @@
+import { useEquipped } from "@/lib/coins";
+import { BOARD_SKINS, pieceGlyphs } from "@/lib/cosmetics";
 import { cn } from "@/lib/utils";
 import type { Board as BoardType, Player } from "@/lib/game/engine";
 
@@ -9,7 +11,7 @@ interface BoardProps {
   pendingCell?: number | null;
 }
 
-function Mark({ value }: { value: Player }) {
+function Mark({ value, glyphs }: { value: Player; glyphs: [string, string] }) {
   const isX = value === "X";
   return (
     <span
@@ -21,14 +23,18 @@ function Mark({ value }: { value: Player }) {
       style={{ textShadow: "var(--shadow-glow)" }}
       aria-hidden
     >
-      {isX ? "✕" : "◯"}
+      {isX ? glyphs[0] : glyphs[1]}
     </span>
   );
 }
 
 export function GameBoard({ board, onPlay, disabled, winningLine, pendingCell }: BoardProps) {
+  const equipped = useEquipped();
+  const glyphs = pieceGlyphs(equipped.pieces);
+  const skin = equipped.board ? BOARD_SKINS[equipped.board] : undefined;
   return (
     <div
+      style={skin}
       className="w-full rounded-3xl border border-border bg-board p-2.5 shadow-tile"
       role="grid"
       aria-label="Tic Tac Toe board"
@@ -55,7 +61,7 @@ export function GameBoard({ board, onPlay, disabled, winningLine, pendingCell }:
                 isEmpty && !disabled && "hover:bg-board-line/40",
               )}
             >
-              {cell ? <Mark value={cell} /> : null}
+              {cell ? <Mark value={cell} glyphs={glyphs} /> : null}
             </button>
           );
         })}
