@@ -91,6 +91,7 @@ function Settings() {
   } = useApp();
   const navigate = useNavigate();
   const [confirmOut, setConfirmOut] = useState(false);
+  const [haptic, setHaptic] = useState(getHapticsEnabled);
 
   if (!ready || !identity) return <LoadingScreen />;
   const isGuest = identity.kind === "guest";

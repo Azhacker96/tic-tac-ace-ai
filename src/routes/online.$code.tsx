@@ -155,7 +155,7 @@ function OnlineMatch() {
         setTimeout(() => sfx.turn(), 180);
       }
     }
-  }, [match]);
+  }, [match, userId]);
 
   /* refresh my own stats once a match finishes */
   useEffect(() => {
