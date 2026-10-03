@@ -7,6 +7,7 @@ import { CoinBadge } from "@/components/CoinBadge";
 import { EmptyState, RequiresGoogle, Screen } from "@/components/Screen";
 import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/lib/app-context";
+import { sfx } from "@/lib/sound";
 import {
   CATEGORY_LABELS,
   useInventory,
@@ -86,7 +87,10 @@ function Shop() {
     setBusy(null);
     await refresh();
     if (error) toast.error(friendlyError(error, "Purchase failed"));
-    else toast.success(`${item.name} unlocked`);
+    else {
+      sfx.coin();
+      toast.success(`${item.name} unlocked`);
+    }
   };
 
   const equip = async (item: ShopItem, on: boolean) => {
