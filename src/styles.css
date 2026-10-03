@@ -307,3 +307,9 @@
   100% { opacity: 0; transform: translateY(-14px); }
 }
 .coin-float { animation: coin-float 1.1s ease-out forwards; }
+
+/* Instant touch response: no double-tap zoom delay, no grey tap flash */
+button, a, [role="button"], [role="gridcell"], input, label {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}

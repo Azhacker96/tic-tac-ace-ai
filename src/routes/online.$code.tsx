@@ -149,9 +149,13 @@ function OnlineMatch() {
     }
     if (match.board !== lastBoard.current) {
       lastBoard.current = match.board;
-      sfx.opponent();
+      const mine = userId ? mySymbol(match, userId) : null;
+      if (match.status === "active" && match.turn === mine) {
+        sfx.opponent();
+        setTimeout(() => sfx.turn(), 180);
+      }
     }
-  }, [match]);
+  }, [match, userId]);
 
   /* refresh my own stats once a match finishes */
   useEffect(() => {

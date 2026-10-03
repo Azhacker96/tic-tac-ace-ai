@@ -48,7 +48,7 @@ function BonusCard({ kind, wallet, now }: { kind: "daily" | "weekly"; wallet: Wa
     }
     qc.setQueriesData({ queryKey: ["coins"], predicate: (q) => q.queryKey[2] === "wallet" }, data);
     void refresh();
-    try { sfx.win(); } catch { /* audio optional */ }
+    try { sfx.coin(); } catch { /* audio optional */ }
     toast.success(`+${amount} coins`);
   };
 

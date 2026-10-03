@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 import { LoadingScreen, Screen } from "@/components/Screen";
 import { useApp } from "@/lib/app-context";
-import { sfx } from "@/lib/sound";
+import { getHapticsEnabled, setHapticsEnabled, sfx, vibrate } from "@/lib/sound";
 import { THEMES } from "@/lib/themes";
 import { cn } from "@/lib/utils";
 
@@ -91,6 +91,7 @@ function Settings() {
   } = useApp();
   const navigate = useNavigate();
   const [confirmOut, setConfirmOut] = useState(false);
+  const [haptic, setHaptic] = useState(getHapticsEnabled);
 
   if (!ready || !identity) return <LoadingScreen />;
   const isGuest = identity.kind === "guest";
@@ -116,6 +117,16 @@ function Settings() {
             onChange={(value) => {
               updateSettings({ sfx: value });
               if (value) setTimeout(() => sfx.place(), 60);
+            }}
+          />
+        </Row>
+        <Row label="Vibration" hint="Buzz on moves, wins and your turn">
+          <Toggle
+            on={haptic}
+            onChange={(value) => {
+              setHaptic(value);
+              setHapticsEnabled(value);
+              if (value) vibrate(30);
             }}
           />
         </Row>
