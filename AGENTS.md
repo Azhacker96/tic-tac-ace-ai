@@ -16,3 +16,5 @@
 - Board state is a 9-character `X/O/-` string; game modules under `src/lib/game/` stay UI-free.
 - Guest profiles are localStorage-only (`src/lib/local-store.ts`); linking Google merges them into the account.
 - Profile avatar: `avatar` (app id) + `avatar_type` app|google + server-synced `avatar_url`; UI receives one effective `avatar` string (https URL = picture). A trigger blocks clients editing player_id/stats/avatar_url.
+- Coins: all values live in `coin_config`, prices in `shop_items`; balances change only via SECURITY DEFINER RPCs (`coin_apply` is not client-callable) and the `coin_transactions` ledger dedupes by (user,type,reference) — prevents client-side coin minting/duplicate rewards.
+- Coin game rewards apply only to server-decided online matches (ttt_finish/claim_abandon/leave_match); offline games give no coins — client results can't be trusted.
