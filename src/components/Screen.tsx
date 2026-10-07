@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import { useApp } from "@/lib/app-context";
 import { cn } from "@/lib/utils";
+import { useHasBottomNav } from "@/components/BottomNav";
 
 interface ScreenProps {
   title?: string;
@@ -19,7 +20,7 @@ interface ScreenProps {
 export function Screen({
   title,
   subtitle,
-  back = true,
+  back: backProp,
   backTo = "/home",
   action,
   children,
@@ -27,6 +28,10 @@ export function Screen({
 }: ScreenProps) {
   const router = useRouter();
   const { online } = useApp();
+  // Main tabs are reached from the bottom bar, so they don't need a back arrow.
+  const isTab = useHasBottomNav();
+  const back = backProp ?? !isTab;
+
 
   const goBack = () => {
     if (window.history.length > 1) router.history.back();

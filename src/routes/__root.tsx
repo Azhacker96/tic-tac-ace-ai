@@ -11,6 +11,7 @@ import type { ErrorComponentProps } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
+import { BottomNav, useHasBottomNav } from "@/components/BottomNav";
 import { AppProvider } from "@/lib/app-context";
 
 import appCss from "../styles.css?url";
@@ -136,10 +137,18 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AppProvider>
-        {/* Required: nested routes render here. */}
-        <Outlet />
+        <NavPadding>
+          {/* Required: nested routes render here. */}
+          <Outlet />
+        </NavPadding>
+        <BottomNav />
         <Toaster position="top-center" />
       </AppProvider>
     </QueryClientProvider>
   );
+}
+
+function NavPadding({ children }: { children: ReactNode }) {
+  const has = useHasBottomNav();
+  return <div style={has ? { paddingBottom: "calc(4rem + env(safe-area-inset-bottom))" } : undefined}>{children}</div>;
 }

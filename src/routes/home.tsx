@@ -1,16 +1,6 @@
 import { AvatarGlyph } from "@/components/AvatarGlyph";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import {
-  Bot,
-  Cog,
-  Globe2,
-  Users,
-  UserRound,
-  UsersRound,
-  ChevronRight,
-  Gift,
-  ShoppingBag,
-} from "lucide-react";
+import { Bot, Cog, Globe2, Users } from "lucide-react";
 import { CoinBadge } from "@/components/CoinBadge";
 import { InviteBanner } from "@/components/InviteBanner";
 import { useEquipped } from "@/lib/coins";
@@ -38,31 +28,29 @@ export const Route = createFileRoute("/home")({
   component: Home,
 });
 
-function ModeTile({
+function ModeCard({
   to,
   icon,
   title,
   description,
-  locked,
 }: {
-  to: string;
+  to: "/play/computer" | "/play/local";
   icon: ReactNode;
   title: string;
   description: string;
-  locked?: boolean;
 }) {
   return (
-    <Link to={to} className="tile-btn active:tile-btn-active">
-      <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
+    <Link
+      to={to}
+      className="flex flex-col gap-3 rounded-3xl border border-border bg-surface p-4 active:scale-[0.97] transition-transform"
+    >
+      <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/15 text-primary">
         {icon}
       </span>
-      <span className="min-w-0 flex-1">
+      <span className="min-w-0">
         <span className="block truncate font-semibold">{title}</span>
-        <span className="block truncate text-xs text-muted-foreground">
-          {locked ? "Needs Google sign-in" : description}
-        </span>
+        <span className="block truncate text-xs text-muted-foreground">{description}</span>
       </span>
-      <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
     </Link>
   );
 }
@@ -132,59 +120,23 @@ function Home() {
 
       {!isGuest ? <InviteBanner /> : null}
 
-      <div className="grid gap-2.5">
-        <ModeTile
-          to="/play/computer"
-          icon={<Bot className="size-5" />}
-          title="Play with Computer"
-          description="Easy · Medium · Hard · Expert"
-        />
-        <ModeTile
-          to="/play/local"
-          icon={<Users className="size-5" />}
-          title="2 Players"
-          description="Pass and play on this phone"
-        />
-        <ModeTile
-          to="/online"
-          icon={<Globe2 className="size-5" />}
-          title="Online Multiplayer"
-          description="Create or join with a match code"
-          locked={isGuest}
-        />
-        <ModeTile
-          to="/friends"
-          icon={<UsersRound className="size-5" />}
-          title="Friends"
-          description="Add by Player ID and invite to play"
-          locked={isGuest}
-        />
-        <ModeTile
-          to="/shop"
-          icon={<ShoppingBag className="size-5" />}
-          title="Shop"
-          description="Board skins, X/O skins, avatars, frames"
-          locked={isGuest}
-        />
-        <ModeTile
-          to="/coins"
-          icon={<Gift className="size-5" />}
-          title="Rewards & Coins"
-          description="Daily and weekly bonus, coin history"
-          locked={isGuest}
-        />
-        <ModeTile
-          to="/profile"
-          icon={<UserRound className="size-5" />}
-          title="Profile"
-          description="Nickname, avatar and full stats"
-        />
-        <ModeTile
-          to="/settings"
-          icon={<Cog className="size-5" />}
-          title="Settings"
-          description="Themes, sound, privacy and account"
-        />
+      <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        Choose a mode
+      </h2>
+      <Link
+        to="/online"
+        className="relative mb-3 block overflow-hidden rounded-3xl bg-primary p-5 text-primary-foreground shadow-glow active:scale-[0.98] transition-transform"
+      >
+        <Globe2 className="absolute -right-4 -bottom-4 size-28 opacity-15" />
+        <span className="inline-flex rounded-full bg-background/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider">
+          {isGuest ? "Needs Google" : "Live 1v1"}
+        </span>
+        <p className="mt-3 font-display text-2xl leading-none">Play Online</p>
+        <p className="mt-1.5 text-xs opacity-80">Create or join a match with a code</p>
+      </Link>
+      <div className="grid grid-cols-2 gap-3">
+        <ModeCard to="/play/computer" icon={<Bot className="size-6" />} title="vs Computer" description="4 difficulty levels" />
+        <ModeCard to="/play/local" icon={<Users className="size-6" />} title="2 Players" description="Same phone" />
       </div>
 
       {isGuest ? (
