@@ -595,6 +595,47 @@ export type Database = {
         }[]
       }
       generate_player_id: { Args: never; Returns: string }
+      get_friends_leaderboard: {
+        Args: never
+        Returns: {
+          avatar: string
+          draws: number
+          is_me: boolean
+          losses: number
+          nickname: string
+          player_id: string
+          rank: number
+          user_id: string
+          wins: number
+        }[]
+      }
+      get_global_leaderboard: {
+        Args: { p_limit?: number }
+        Returns: {
+          avatar: string
+          draws: number
+          is_me: boolean
+          losses: number
+          nickname: string
+          player_id: string
+          rank: number
+          user_id: string
+          wins: number
+        }[]
+      }
+      get_head_to_head: {
+        Args: never
+        Returns: {
+          avatar: string
+          draws: number
+          my_wins: number
+          nickname: string
+          played: number
+          player_id: string
+          their_wins: number
+          user_id: string
+        }[]
+      }
       get_wallet: { Args: never; Returns: Json }
       heartbeat: { Args: never; Returns: undefined }
       invite_friend: {
@@ -662,6 +703,19 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      lb_rows: {
+        Args: { p_ids: string[] }
+        Returns: {
+          avatar: string
+          draws: number
+          losses: number
+          nickname: string
+          player_id: string
+          rank: number
+          user_id: string
+          wins: number
+        }[]
       }
       leave_match: { Args: { p_code: string }; Returns: undefined }
       list_blocked: {
