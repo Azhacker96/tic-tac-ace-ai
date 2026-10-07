@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Gamepad2, Gift, ShoppingBag, UserRound, UsersRound } from "lucide-react";
+import { Gamepad2, ShoppingBag, Trophy, UserRound, UsersRound } from "lucide-react";
 
 import { useApp } from "@/lib/app-context";
 import { cn } from "@/lib/utils";
@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 const TABS = [
   { to: "/home", label: "Play", icon: Gamepad2 },
   { to: "/shop", label: "Shop", icon: ShoppingBag },
-  { to: "/coins", label: "Rewards", icon: Gift },
+  { to: "/leaderboard", label: "Ranks", icon: Trophy },
   { to: "/friends", label: "Friends", icon: UsersRound },
   { to: "/profile", label: "Profile", icon: UserRound },
 ] as const;

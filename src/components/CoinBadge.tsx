@@ -19,6 +19,22 @@ export function CoinBadge({ className, link = true }: { className?: string; link
     prev.current = data.balance;
   }, [data]);
 
+  // Count daily/weekly bonuses that are claimable now (server time, re-checked every 30s).
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 30_000);
+    return () => clearInterval(id);
+  }, []);
+  void tick;
+  let ready = 0;
+  if (data) {
+    const skew = new Date(data.server_now).getTime() - Date.now();
+    const now = Date.now() + skew;
+    for (const n of [data.daily_next, data.weekly_next]) {
+      if (!n || new Date(n).getTime() <= now) ready++;
+    }
+  }
+
   const body = (
     <span
       className={cn(
@@ -46,6 +62,14 @@ export function CoinBadge({ className, link = true }: { className?: string; link
           onAnimationEnd={() => setDelta(null)}
         >
           {delta.v >= 0 ? `+${delta.v}` : delta.v}
+        </span>
+      ) : null}
+      {link && ready > 0 ? (
+        <span
+          aria-label={`${ready} reward${ready > 1 ? "s" : ""} available`}
+          className="absolute -right-1.5 -top-1.5 flex size-5 animate-pulse items-center justify-center rounded-full bg-destructive text-[11px] font-bold text-destructive-foreground"
+        >
+          {ready}
         </span>
       ) : null}
     </span>

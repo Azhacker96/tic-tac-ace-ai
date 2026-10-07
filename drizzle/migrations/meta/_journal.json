@@ -36,6 +36,13 @@
       "when": 1790950925147,
       "tag": "0004_coins_lock_writes",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791395826080,
+      "tag": "0005_leaderboards",
+      "breakpoints": true
     }
   ]
 }

@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoinsRouteImport } from './routes/coins'
 import { Route as FriendsRouteImport } from './routes/friends'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SetupRouteImport } from './routes/setup'
@@ -40,6 +41,11 @@ const FriendsRoute = FriendsRouteImport.update({
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeaderboardRoute = LeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/coins': typeof CoinsRoute
   '/friends': typeof FriendsRoute
   '/home': typeof HomeRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/profile': typeof ProfileRoute
   '/settings': typeof SettingsRoute
   '/setup': typeof SetupRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/coins': typeof CoinsRoute
   '/friends': typeof FriendsRoute
   '/home': typeof HomeRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/profile': typeof ProfileRoute
   '/settings': typeof SettingsRoute
   '/setup': typeof SetupRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/coins': typeof CoinsRoute
   '/friends': typeof FriendsRoute
   '/home': typeof HomeRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/profile': typeof ProfileRoute
   '/settings': typeof SettingsRoute
   '/setup': typeof SetupRoute
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/coins'
     | '/friends'
     | '/home'
+    | '/leaderboard'
     | '/profile'
     | '/settings'
     | '/setup'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/coins'
     | '/friends'
     | '/home'
+    | '/leaderboard'
     | '/profile'
     | '/settings'
     | '/setup'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/coins'
     | '/friends'
     | '/home'
+    | '/leaderboard'
     | '/profile'
     | '/settings'
     | '/setup'
@@ -176,6 +188,7 @@ export interface RootRouteChildren {
   CoinsRoute: typeof CoinsRoute
   FriendsRoute: typeof FriendsRoute
   HomeRoute: typeof HomeRoute
+  LeaderboardRoute: typeof LeaderboardRoute
   ProfileRoute: typeof ProfileRoute
   SettingsRoute: typeof SettingsRoute
   SetupRoute: typeof SetupRoute
@@ -214,6 +227,13 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leaderboard': {
+      id: '/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof LeaderboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -280,6 +300,7 @@ const rootRouteChildren: RootRouteChildren = {
   CoinsRoute: CoinsRoute,
   FriendsRoute: FriendsRoute,
   HomeRoute: HomeRoute,
+  LeaderboardRoute: LeaderboardRoute,
   ProfileRoute: ProfileRoute,
   SettingsRoute: SettingsRoute,
   SetupRoute: SetupRoute,
