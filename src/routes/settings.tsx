@@ -224,8 +224,14 @@ function Settings() {
         </Row>
       </Section>
 
+      <Section title="About">
+        <Row label="How to play" hint="Get three of your marks in a row — across, down or diagonal. Online turns last 20s; autopilot moves if time runs out." />
+        <Row label="Coins" hint="Virtual coins only — no real-money value, can't be bought or withdrawn." />
+        <Row label="Version" hint="Tic Tac Arcade 1.0.0" />
+      </Section>
+
       <p className="pb-4 text-center text-[11px] text-muted-foreground">
-        Tic Tac Arcade · settings are saved on this device
+        Settings are saved on this device
       </p>
 
       {confirmOut ? (
