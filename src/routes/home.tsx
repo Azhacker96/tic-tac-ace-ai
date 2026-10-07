@@ -1,16 +1,6 @@
 import { AvatarGlyph } from "@/components/AvatarGlyph";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import {
-  Bot,
-  Cog,
-  Globe2,
-  Users,
-  UserRound,
-  UsersRound,
-  ChevronRight,
-  Gift,
-  ShoppingBag,
-} from "lucide-react";
+import { Bot, Cog, Globe2, Users } from "lucide-react";
 import { CoinBadge } from "@/components/CoinBadge";
 import { InviteBanner } from "@/components/InviteBanner";
 import { useEquipped } from "@/lib/coins";
@@ -38,31 +28,29 @@ export const Route = createFileRoute("/home")({
   component: Home,
 });
 
-function ModeTile({
+function ModeCard({
   to,
   icon,
   title,
   description,
-  locked,
 }: {
-  to: string;
+  to: "/play/computer" | "/play/local";
   icon: ReactNode;
   title: string;
   description: string;
-  locked?: boolean;
 }) {
   return (
-    <Link to={to} className="tile-btn active:tile-btn-active">
-      <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
+    <Link
+      to={to}
+      className="flex flex-col gap-3 rounded-3xl border border-border bg-surface p-4 active:scale-[0.97] transition-transform"
+    >
+      <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/15 text-primary">
         {icon}
       </span>
-      <span className="min-w-0 flex-1">
+      <span className="min-w-0">
         <span className="block truncate font-semibold">{title}</span>
-        <span className="block truncate text-xs text-muted-foreground">
-          {locked ? "Needs Google sign-in" : description}
-        </span>
+        <span className="block truncate text-xs text-muted-foreground">{description}</span>
       </span>
-      <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
     </Link>
   );
 }
