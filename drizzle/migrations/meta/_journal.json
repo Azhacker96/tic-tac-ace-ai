@@ -43,6 +43,13 @@
       "when": 1791395826080,
       "tag": "0005_leaderboards",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791428623941,
+      "tag": "0006_player_card_spin_chat_shop",
+      "breakpoints": true
     }
   ]
 }

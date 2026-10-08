@@ -89,6 +89,7 @@ export type Database = {
           created_at: string
           earned: number
           last_daily_claim: string | null
+          last_spin: string | null
           last_weekly_claim: string | null
           spent: number
           updated_at: string
@@ -99,6 +100,7 @@ export type Database = {
           created_at?: string
           earned?: number
           last_daily_claim?: string | null
+          last_spin?: string | null
           last_weekly_claim?: string | null
           spent?: number
           updated_at?: string
@@ -109,6 +111,7 @@ export type Database = {
           created_at?: string
           earned?: number
           last_daily_claim?: string | null
+          last_spin?: string | null
           last_weekly_claim?: string | null
           spent?: number
           updated_at?: string
@@ -143,6 +146,33 @@ export type Database = {
         }
         Relationships: []
       }
+      gift_items: {
+        Row: {
+          active: boolean
+          emoji: string
+          id: string
+          name: string
+          price: number
+          sort: number
+        }
+        Insert: {
+          active?: boolean
+          emoji: string
+          id: string
+          name: string
+          price: number
+          sort?: number
+        }
+        Update: {
+          active?: boolean
+          emoji?: string
+          id?: string
+          name?: string
+          price?: number
+          sort?: number
+        }
+        Relationships: []
+      }
       match_invites: {
         Row: {
           code: string
@@ -174,6 +204,41 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "match_invites_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      match_messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          kind: string
+          match_id: string
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          kind: string
+          match_id: string
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          match_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_messages_match_id_fkey"
             columns: ["match_id"]
             isOneToOne: false
             referencedRelation: "matches"
@@ -372,6 +437,27 @@ export type Database = {
           preview?: string
           price?: number
           sort?: number
+        }
+        Relationships: []
+      }
+      spin_prizes: {
+        Row: {
+          amount: number
+          label: string
+          slot: number
+          weight: number
+        }
+        Insert: {
+          amount: number
+          label: string
+          slot: number
+          weight: number
+        }
+        Update: {
+          amount?: number
+          label?: string
+          slot?: number
+          weight?: number
         }
         Relationships: []
       }
@@ -636,6 +722,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_player_card: { Args: { p_user: string }; Returns: Json }
       get_wallet: { Args: never; Returns: Json }
       heartbeat: { Args: never; Returns: undefined }
       invite_friend: {
@@ -938,6 +1025,10 @@ export type Database = {
         }
       }
       send_friend_request: { Args: { p_player_id: string }; Returns: undefined }
+      send_match_message: {
+        Args: { p_body: string; p_code: string; p_kind: string }
+        Returns: Json
+      }
       set_autopilot: {
         Args: { p_code: string; p_on: boolean }
         Returns: {
@@ -971,6 +1062,8 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      spin_status: { Args: never; Returns: Json }
+      spin_wheel: { Args: never; Returns: Json }
       ttt_ai_move: {
         Args: { p_board: string; p_symbol: string }
         Returns: number
