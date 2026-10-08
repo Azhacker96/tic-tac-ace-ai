@@ -111,10 +111,10 @@ function RankList({ tab }: { tab: "global" | "friends" }) {
   return (
     <>
       <ul className="space-y-2">{list.map((r) => <RankItem key={r.user_id} r={r} />)}</ul>
-      {me ? (
-        <div className="sticky bottom-20 mt-3">
-          {meOutside ? <p className="mb-1 text-center text-xs text-muted-foreground">Your position</p> : null}
-          <ul><RankItem r={me} sticky /></ul>
+      {meOutside && me ? (
+        <div className="mt-3">
+          <p className="mb-1 text-center text-xs text-muted-foreground">Your position</p>
+          <ul><RankItem r={me} /></ul>
         </div>
       ) : null}
     </>
@@ -123,21 +123,12 @@ function RankList({ tab }: { tab: "global" | "friends" }) {
 
 function H2HList() {
   const q = useH2H();
-  const { identity } = useApp();
   if (q.isLoading) return <Spinner />;
   if (q.isError) return <EmptyState icon="⚠️" title="Couldn't load scorecard" description="Check your connection and try again." />;
   const rows = q.data ?? [];
   if (!rows.length) return <EmptyState icon="⚔️" title="No rivals yet" description="Add friends and play them online to build your scorecard." />;
-  const tot = rows.reduce((a, r) => ({ w: a.w + r.my_wins, l: a.l + r.their_wins, d: a.d + r.draws }), { w: 0, l: 0, d: 0 });
   return (
     <>
-      <div className="mb-3 flex items-center gap-3 rounded-2xl border border-primary bg-primary/10 px-3 py-2.5">
-        <span className="flex size-10 items-center justify-center overflow-hidden rounded-full bg-background text-xl">
-          <AvatarGlyph avatar={identity?.avatar} />
-        </span>
-        <span className="flex-1 font-semibold">You vs all friends</span>
-        <Score w={tot.w} l={tot.l} d={tot.d} />
-      </div>
       <ul className="space-y-2">
         {rows.map((r) => (
           <li key={r.user_id} className="flex items-center gap-3 rounded-2xl border border-border bg-surface px-3 py-2.5">
