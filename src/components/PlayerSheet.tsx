@@ -68,11 +68,11 @@ export function PlayerSheet() {
   const c = q.data;
   const total = c ? c.wins + c.losses + c.draws : 0;
 
-  const run = async (fn: () => Promise<{ error: unknown }>, ok: string) => {
+  const run = async (fn: () => PromiseLike<{ error: unknown }>, ok: string) => {
     setBusy(true);
     const { error } = await fn();
     setBusy(false);
-    if (error) return toast.error(friendlyError(error));
+    if (error) { toast.error(friendlyError(error)); return; }
     toast.success(ok);
     void qc.invalidateQueries({ queryKey: ["player-card", userId] });
   };
@@ -82,7 +82,7 @@ export function PlayerSheet() {
     setBusy(true);
     const { data, error } = await supabase.rpc("invite_friend", { p_user_id: c.user_id });
     setBusy(false);
-    if (error) return toast.error(friendlyError(error));
+    if (error) { toast.error(friendlyError(error)); return; }
     closePlayer();
     void navigate({ to: "/online/$code", params: { code: (data as { code: string }).code } });
   };

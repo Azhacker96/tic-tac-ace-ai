@@ -57,7 +57,7 @@ export function MatchChat({
   const send = async (kind: Msg["kind"], body: string) => {
     setPanel(null);
     const { error } = await supabase.rpc("send_match_message", { p_code: code, p_kind: kind, p_body: body });
-    if (error) return toast.error(friendlyError(error));
+    if (error) { toast.error(friendlyError(error)); return; }
     if (kind === "gift") { sfx.coin(); void refreshCoins(); }
   };
 
