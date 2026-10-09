@@ -1,4 +1,5 @@
 import { AvatarGlyph } from "@/components/AvatarGlyph";
+import { BubbleView, type Bubble } from "@/components/game/MatchChat";
 
 import { cn } from "@/lib/utils";
 
@@ -9,6 +10,8 @@ interface PlayerChipProps {
   active?: boolean | undefined;
   subtitle?: string | undefined;
   badge?: string | undefined;
+  onAvatarClick?: (() => void) | undefined;
+  bubble?: Bubble | null | undefined;
 }
 
 export function PlayerChip({
@@ -18,19 +21,28 @@ export function PlayerChip({
   active,
   subtitle,
   badge,
+  onAvatarClick,
+  bubble,
 }: PlayerChipProps) {
   return (
     <div
       className={cn(
-        "flex min-w-0 flex-1 items-center gap-2.5 rounded-2xl border p-2.5 transition-all",
+        "relative flex min-w-0 flex-1 items-center gap-2.5 rounded-2xl border p-2.5 transition-all",
         active
           ? "border-primary bg-primary/15 shadow-[0_0_0_1px_var(--color-primary)]"
           : "border-border bg-surface opacity-80",
       )}
     >
-      <div className="flex size-9 shrink-0 overflow-hidden items-center justify-center rounded-xl bg-background text-lg">
+      <BubbleView b={bubble} />
+      <button
+        type="button"
+        disabled={!onAvatarClick}
+        onClick={onAvatarClick}
+        aria-label={`View ${name}`}
+        className="flex size-9 shrink-0 overflow-hidden items-center justify-center rounded-xl bg-background text-lg active:scale-95"
+      >
         {avatar ? <AvatarGlyph avatar={avatar} /> : symbol === "X" ? "✕" : "◯"}
-      </div>
+      </button>
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold">{name}</p>
         <p className="truncate text-[11px] text-muted-foreground">

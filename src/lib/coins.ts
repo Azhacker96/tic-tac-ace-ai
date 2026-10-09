@@ -57,6 +57,8 @@ export const TX_LABELS: Record<string, string> = {
   game_loss: "Game Loss",
   game_draw: "Game Draw",
   shop_purchase: "Shop Purchase",
+  lucky_spin: "Lucky Spin",
+  gift_sent: "Gift Sent",
 };
 
 export const CATEGORY_LABELS: Record<ShopCategory, string> = {

@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
 import { AvatarGlyph } from "@/components/AvatarGlyph";
+import { openPlayer } from "@/components/PlayerSheet";
 import { EmptyState, RequiresGoogle, Screen } from "@/components/Screen";
 import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/lib/app-context";
@@ -83,9 +84,9 @@ function RankItem({ r, sticky }: { r: RankRow; sticky?: boolean }) {
       )}
     >
       <span className="w-9 text-center text-sm font-bold tabular-nums">{medal(r.rank)}</span>
-      <span className="flex size-10 items-center justify-center overflow-hidden rounded-full bg-background text-xl">
+      <button type="button" aria-label={`View ${r.nickname}`} onClick={() => openPlayer(r.user_id)} className="flex size-10 items-center justify-center overflow-hidden rounded-full bg-background text-xl active:scale-95">
         <AvatarGlyph avatar={r.avatar} />
-      </span>
+      </button>
       <span className="min-w-0 flex-1">
         <span className="block truncate font-semibold">{r.nickname}{r.is_me ? " (You)" : ""}</span>
         <span className="block text-xs text-muted-foreground">{r.player_id}</span>
@@ -132,9 +133,9 @@ function H2HList() {
       <ul className="space-y-2">
         {rows.map((r) => (
           <li key={r.user_id} className="flex items-center gap-3 rounded-2xl border border-border bg-surface px-3 py-2.5">
-            <span className="flex size-10 items-center justify-center overflow-hidden rounded-full bg-background text-xl">
+            <button type="button" aria-label={`View ${r.nickname}`} onClick={() => openPlayer(r.user_id)} className="flex size-10 items-center justify-center overflow-hidden rounded-full bg-background text-xl active:scale-95">
               <AvatarGlyph avatar={r.avatar} />
-            </span>
+            </button>
             <span className="min-w-0 flex-1">
               <span className="block truncate font-semibold">{r.nickname}</span>
               <span className="block text-xs text-muted-foreground">
