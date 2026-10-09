@@ -8,6 +8,8 @@ import { EmptyState, LoadingScreen, RequiresGoogle, Screen } from "@/components/
 import { GameBoard } from "@/components/game/Board";
 import { useRefreshCoins } from "@/lib/coins";
 import { PlayerChip } from "@/components/game/PlayerChip";
+import { MatchChat, type Bubble } from "@/components/game/MatchChat";
+import { openPlayer } from "@/components/PlayerSheet";
 import { ResultSheet, type Outcome } from "@/components/game/ResultSheet";
 import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/lib/app-context";
@@ -64,6 +66,10 @@ function OnlineMatch() {
   const [leaving, setLeaving] = useState(false);
   const [confirmLeave, setConfirmLeave] = useState(false);
   const [resultSeen, setResultSeen] = useState(false);
+  const [bubbles, setBubbles] = useState<Record<string, Bubble | null>>({});
+  const onBubble = useCallback((id: string, b: Bubble | null) => {
+    setBubbles((prev) => (b === null && prev[id] && prev[id] !== null ? { ...prev, [id]: null } : b ? { ...prev, [id]: b } : prev));
+  }, []);
 
   const userId = session?.user?.id ?? null;
   const timeoutGuard = useRef(0);
@@ -394,12 +400,16 @@ function OnlineMatch() {
           symbol={symbol}
           active={myTurn}
           subtitle={autopilotOn ? "Autopilot" : `Plays ${symbol}`}
+          bubble={bubbles[userId]}
+          onAvatarClick={() => openPlayer(userId)}
         />
         <PlayerChip
           name={opp?.nickname ?? "Opponent"}
           avatar={opp?.avatar}
           symbol={oppSymbol}
           active={!myTurn && !finished}
+          bubble={oppId ? bubbles[oppId] : null}
+          onAvatarClick={() => openPlayer(oppId)}
           subtitle={
             opponentAutopilot(match, userId)
               ? "Autopilot"
@@ -461,6 +471,8 @@ function OnlineMatch() {
           pendingCell={pending}
         />
       </div>
+
+      <MatchChat code={code} matchId={match.id} userId={userId} onBubble={onBubble} />
 
       {!autopilotOn && match.status === "active" ? (
         <button

@@ -19,6 +19,10 @@ export const PREMIUM_AVATARS = [
   { id: "avatar_wizard", emoji: "🧙" },
   { id: "avatar_octopus", emoji: "🐙" },
   { id: "avatar_crown", emoji: "👑" },
+  { id: "avatar_ninja", emoji: "🥷" },
+  { id: "avatar_king", emoji: "🤴" },
+  { id: "avatar_gamer", emoji: "👾" },
+  { id: "avatar_astro", emoji: "🧑‍🚀" },
 ] as const;
 
 export type AvatarId = (typeof AVATARS)[number]["id"];

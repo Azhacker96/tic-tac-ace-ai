@@ -1,4 +1,5 @@
 import { AvatarGlyph } from "@/components/AvatarGlyph";
+import { openPlayer } from "@/components/PlayerSheet";
 import { createFileRoute } from "@tanstack/react-router";
 import { Ban, Check, Gamepad2, Loader2, Search, UserMinus, X } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
@@ -236,7 +237,7 @@ function Friends() {
           <ul className="grid gap-2">
             {accepted.map((f) => (
               <li key={f.friendship_id} className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3">
-                <span className="relative flex size-10 items-center justify-center rounded-xl bg-background text-xl">
+                <span role="button" tabIndex={0} onClick={() => openPlayer(f.user_id)} className="relative flex size-10 cursor-pointer items-center justify-center rounded-xl bg-background text-xl active:scale-95">
                   <AvatarGlyph avatar={f.avatar} />
                   <span
                     className={cn(
@@ -290,7 +291,7 @@ function Friends() {
           <ul className="grid gap-2">
             {requests.map((f) => (
               <li key={f.friendship_id} className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3">
-                <span className="flex size-10 items-center justify-center rounded-xl bg-background text-xl">
+                <span role="button" tabIndex={0} onClick={() => openPlayer(f.user_id)} className="flex size-10 cursor-pointer items-center justify-center rounded-xl bg-background text-xl active:scale-95">
                   <AvatarGlyph avatar={f.avatar} />
                 </span>
                 <div className="min-w-0 flex-1">
