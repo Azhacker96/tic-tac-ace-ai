@@ -17,7 +17,8 @@ import {
   type ShopCategory,
   type ShopItem,
 } from "@/lib/coins";
-import { BOARD_SKINS, frameStyle, pieceGlyphs } from "@/lib/cosmetics";
+import { BoardCorners } from "@/components/game/BoardDecor";
+import { boardTheme, frameStyle, pieceGlyphs } from "@/lib/cosmetics";
 import { cn } from "@/lib/utils";
 import { friendlyError } from "@/lib/validation";
 
@@ -40,9 +41,18 @@ const CATS: ShopCategory[] = ["board", "pieces", "avatar", "frame", "other"];
 
 function Preview({ item }: { item: ShopItem }) {
   if (item.category === "board") {
+    const t = boardTheme(item.preview);
+    const sample = ["X", "", "O", "", "X", "", "O", "", ""];
     return (
-      <div style={BOARD_SKINS[item.preview]} className="grid size-14 grid-cols-3 gap-0.5 rounded-lg bg-board p-1">
-        {Array.from({ length: 9 }).map((_, i) => <span key={i} className="rounded-sm bg-cell" />)}
+      <div style={t.frame} className="relative w-full overflow-hidden rounded-xl p-2">
+        <BoardCorners decor={t.decor} accent={t.accent} size={12} />
+        <div className="relative mx-auto grid w-[86%] grid-cols-3 gap-1">
+          {sample.map((v, i) => (
+            <span key={i} style={t.cell} className="flex aspect-square items-center justify-center rounded-md font-display text-base leading-none">
+              {v === "X" ? <span className="text-mark-x">✕</span> : v === "O" ? <span className="text-mark-o">◯</span> : null}
+            </span>
+          ))}
+        </div>
       </div>
     );
   }
@@ -134,7 +144,7 @@ function Shop() {
             const canAfford = (wallet.data?.balance ?? 0) >= item.price;
             return (
               <li key={item.id} className={cn("flex flex-col items-center gap-2 rounded-2xl border bg-surface p-3 text-center", row?.equipped ? "border-primary" : "border-border")}>
-                <div className="flex h-16 items-center justify-center"><Preview item={item} /></div>
+                <div className={cn("flex items-center justify-center", item.category === "board" ? "w-full" : "h-16")}><Preview item={item} /></div>
                 <p className="w-full truncate text-sm font-semibold">{item.name}</p>
                 {row ? (
                   <button
