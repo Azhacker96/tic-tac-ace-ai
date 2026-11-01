@@ -146,7 +146,7 @@ export const BOARD_THEMES: Record<string, BoardTheme> = {
 };
 
 export function boardTheme(preview: string | undefined): BoardTheme {
-  return (preview && BOARD_THEMES[preview]) || BOARD_THEMES.default;
+  return (preview && BOARD_THEMES[preview]) || (BOARD_THEMES["default"] as BoardTheme);
 }
 
 /** Kept for compatibility with older imports. */
