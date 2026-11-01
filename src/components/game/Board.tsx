@@ -1,7 +1,8 @@
-import { memo, useCallback } from "react";
+import { memo, useCallback, type CSSProperties } from "react";
 
+import { BoardCorners } from "@/components/game/BoardDecor";
 import { useEquipped } from "@/lib/coins";
-import { BOARD_SKINS, pieceGlyphs } from "@/lib/cosmetics";
+import { boardTheme, pieceGlyphs } from "@/lib/cosmetics";
 import { cn } from "@/lib/utils";
 import type { Board as BoardType, Player } from "@/lib/game/engine";
 
@@ -18,6 +19,7 @@ interface CellProps {
   value: Player | null;
   glyphX: string;
   glyphO: string;
+  cellStyle: CSSProperties;
   disabled: boolean;
   winning: boolean;
   pending: boolean;
@@ -29,6 +31,7 @@ const Cell = memo(function Cell({
   value,
   glyphX,
   glyphO,
+  cellStyle,
   disabled,
   winning,
   pending,
@@ -42,14 +45,14 @@ const Cell = memo(function Cell({
       aria-label={`Square ${index + 1}${value ? `, ${value}` : ", empty"}`}
       disabled={disabled || !isEmpty}
       onClick={() => onPlay(index)}
+      style={cellStyle}
       className={cn(
         "relative flex aspect-square items-center justify-center rounded-2xl",
-        "bg-cell transition-transform duration-100 active:scale-95",
-        "border border-board-line/70 [transform:translateZ(0)]",
-        winning && "bg-primary/25 ring-2 ring-primary",
+        "transition-[transform,filter] duration-100 active:scale-95 [transform:translateZ(0)]",
+        winning && "ring-2 ring-primary brightness-125",
         pending && "opacity-60",
         !isEmpty && "cursor-default",
-        isEmpty && !disabled && "hover:bg-board-line/40",
+        isEmpty && !disabled && "hover:brightness-125",
       )}
     >
       {value ? (
@@ -72,17 +75,18 @@ const Cell = memo(function Cell({
 function GameBoardInner({ board, onPlay, disabled, winningLine, pendingCell }: BoardProps) {
   const equipped = useEquipped();
   const glyphs = pieceGlyphs(equipped.pieces);
-  const skin = equipped.board ? BOARD_SKINS[equipped.board] : undefined;
+  const theme = boardTheme(equipped.board);
   // Stable handler so memoized cells don't redraw when the parent re-renders (e.g. timer ticks).
   const play = useCallback((cell: number) => onPlay(cell), [onPlay]);
   return (
     <div
-      style={skin}
-      className="w-full rounded-3xl border border-border bg-board p-2.5 shadow-tile"
+      style={theme.frame}
+      className="relative w-full overflow-hidden rounded-3xl p-3"
       role="grid"
       aria-label="Tic Tac Toe board"
     >
-      <div className="grid grid-cols-3 gap-2.5">
+      <BoardCorners decor={theme.decor} accent={theme.accent} />
+      <div className="relative grid grid-cols-3 gap-2.5">
         {board.map((cell, index) => (
           <Cell
             key={index}
@@ -90,6 +94,7 @@ function GameBoardInner({ board, onPlay, disabled, winningLine, pendingCell }: B
             value={cell}
             glyphX={glyphs[0]}
             glyphO={glyphs[1]}
+            cellStyle={theme.cell}
             disabled={Boolean(disabled)}
             winning={winningLine?.includes(index) ?? false}
             pending={pendingCell === index}
