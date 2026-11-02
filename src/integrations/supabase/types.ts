@@ -370,6 +370,7 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           draws: number
+          guest_merged: boolean
           id: string
           last_seen: string
           losses: number
@@ -384,6 +385,7 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           draws?: number
+          guest_merged?: boolean
           id: string
           last_seen?: string
           losses?: number
@@ -398,6 +400,7 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           draws?: number
+          guest_merged?: boolean
           id?: string
           last_seen?: string
           losses?: number
@@ -653,6 +656,7 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           draws: number
+          guest_merged: boolean
           id: string
           last_seen: string
           losses: number
@@ -916,6 +920,7 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           draws: number
+          guest_merged: boolean
           id: string
           last_seen: string
           losses: number
@@ -944,6 +949,7 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           draws: number
+          guest_merged: boolean
           id: string
           last_seen: string
           losses: number

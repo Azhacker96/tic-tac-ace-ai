@@ -50,6 +50,13 @@
       "when": 1791428623941,
       "tag": "0006_player_card_spin_chat_shop",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793650853530,
+      "tag": "0007_lock_stats_and_longer_codes",
+      "breakpoints": true
     }
   ]
 }
