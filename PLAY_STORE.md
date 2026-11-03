@@ -10,7 +10,7 @@
 - Play with Computer: Easy / Medium / Hard / Expert. Easy is mostly random, Medium blocks and takes wins,
   Hard is near-optimal with occasional slips, Expert is full minimax (unbeatable).
 - 2 Players same device: pass-and-play with running score, winning-line highlight, rematch, reset.
-- Online multiplayer: 5-character match codes, lobby with copy/share, real-time board sync
+- Online multiplayer: 6-character match codes, lobby with copy/share, real-time board sync
   (realtime subscription + polling fallback), turn ownership, rematch with symbol swap.
 - 20-second turn timer with autopilot: on expiry the server plays a valid move for the idle player
   (never an instant loss); the returning player can switch autopilot off mid-match.
@@ -48,7 +48,7 @@
 - Online multiplayer and friends require a Google account (by design — guests have no server identity).
 - Automated end-to-end testing of the online/friends screens was not possible in this environment because
   Google consent cannot be scripted; the underlying server functions were exercised directly.
-- Music is a toggle only; no licensed music track is bundled (sound effects are generated).
+- Music is a soft synthesized loop (no licensed track bundled).
 - Guest data lives on one device; signing out as a guest clears it (confirmed in a dialog).
 
 ## Packaging as APK / AAB

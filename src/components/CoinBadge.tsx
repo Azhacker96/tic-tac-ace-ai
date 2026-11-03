@@ -22,8 +22,16 @@ export function CoinBadge({ className, link = true }: { className?: string; link
   // Count daily/weekly bonuses that are claimable now (server time, re-checked every 30s).
   const [tick, setTick] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => setTick((t) => t + 1), 30_000);
-    return () => clearInterval(id);
+    const bump = () => setTick((t) => t + 1);
+    const id = setInterval(bump, 30_000);
+    const onVis = () => {
+      if (!document.hidden) bump();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      clearInterval(id);
+      document.removeEventListener("visibilitychange", onVis);
+    };
   }, []);
   void tick;
   let ready = 0;

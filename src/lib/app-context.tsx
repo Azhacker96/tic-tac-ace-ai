@@ -12,7 +12,7 @@ import {
 
 import { lovable } from "@/integrations/lovable/index";
 import { supabase } from "@/integrations/supabase/client";
-import { setSfxEnabled } from "@/lib/sound";
+import { setMusicEnabled, setSfxEnabled } from "@/lib/sound";
 import { applyTheme, type ThemeId } from "@/lib/themes";
 import {
   DEFAULT_SETTINGS,
@@ -102,6 +102,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setSettings(s);
     applyTheme(s.theme);
     setSfxEnabled(s.sfx);
+    setMusicEnabled(s.music);
     setGuest(loadGuest());
     setStats(loadStats());
     setOnline(navigator.onLine);
@@ -263,6 +264,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     saveSettings(next);
     applyTheme(next.theme);
     setSfxEnabled(next.sfx);
+    setMusicEnabled(next.music);
   }, []);
 
   const updateSettings = useCallback(
@@ -285,16 +287,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [session?.user, updateSettings, fetchProfile],
   );
 
-  const recordResult = useCallback(
-    async (result: "win" | "loss" | "draw") => {
-      setStats(bumpStats(result));
-      if (session?.user && profile) {
-        await supabase.rpc("record_game_result", { p_result: result });
-        await fetchProfile(session.user.id);
-      }
-    },
-    [session?.user, profile, fetchProfile],
-  );
+  // Offline games only update local stats; account stats come from server-decided online matches.
+  const recordResult = useCallback(async (result: "win" | "loss" | "draw") => {
+    setStats(bumpStats(result));
+  }, []);
 
   const refreshProfile = useCallback(async () => {
     if (session?.user) await fetchProfile(session.user.id);

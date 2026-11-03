@@ -19,3 +19,4 @@
 - Coins: all values live in `coin_config`, prices in `shop_items`; balances change only via SECURITY DEFINER RPCs (`coin_apply` is not client-callable) and the `coin_transactions` ledger dedupes by (user,type,reference) — prevents client-side coin minting/duplicate rewards.
 - Coin game rewards apply only to server-decided online matches (ttt_finish/claim_abandon/leave_match); offline games give no coins — client results can't be trusted.
 - Leaderboards come from SECURITY DEFINER RPCs (get_global_leaderboard/get_friends_leaderboard/get_head_to_head) over server-owned profile stats and finished matches — rankings can't be faked client-side.
+- Account win/loss stats change only through server-decided online matches; offline results stay local and guest stats merge once (capped) right after linking — prevents leaderboard faking.
