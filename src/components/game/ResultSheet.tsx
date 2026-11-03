@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { Confetti } from "@/components/game/Confetti";
 import { cn } from "@/lib/utils";
 
 export type Outcome = "win" | "loss" | "draw";
@@ -32,6 +33,7 @@ export function ResultSheet({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-background/80 backdrop-blur-sm">
+      {outcome === "win" ? <Confetti /> : null}
       <div className="safe-bottom w-full max-w-[34rem] animate-rise rounded-t-3xl border-t border-border bg-surface px-5 pt-6">
         <div className="text-center">
           <div className="text-5xl">{emoji}</div>
