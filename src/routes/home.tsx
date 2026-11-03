@@ -143,8 +143,7 @@ function Home() {
         <div className="mt-5 rounded-2xl border border-accent/40 bg-accent/10 p-4">
           <p className="text-sm font-semibold">Playing as a guest</p>
           <p className="mt-1 text-xs text-muted-foreground">
-            Link a Google account to unlock online matches and friends. Your nickname, Player ID and
-            stats all carry over.
+            Link a Google account to unlock online matches and friends. Your nickname and Player ID carry over; offline stats stay on this device.
           </p>
           <Link
             to="/settings"

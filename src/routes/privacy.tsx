@@ -43,7 +43,7 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: "Deleting your data",
-    body: "Guests can delete everything by signing out. Google users can ask for account deletion through the support contact on the store listing; we delete the profile, coins, friends and match data.",
+    body: "Guests can delete everything by signing out. Google users can ask for account deletion by emailing support@tictacarcade.app; we delete the profile, coins, friends and match data.",
   },
 ];
 

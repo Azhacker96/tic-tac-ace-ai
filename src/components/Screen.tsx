@@ -113,7 +113,7 @@ export function RequiresGoogle({ feature }: { feature: string }) {
     <EmptyState
       icon="🔒"
       title={`${feature} needs a Google account`}
-      description="Guest profiles stay on this device. Link Google to unlock online play and friends — your nickname, Player ID and stats carry over."
+      description="Guest profiles stay on this device. Link Google to unlock online play and friends — your nickname and Player ID carry over."
       action={
         <Link
           to="/settings"
