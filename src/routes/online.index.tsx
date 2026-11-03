@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Copy, Loader2 } from "lucide-react";
+import { Copy, Loader2, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -95,8 +95,36 @@ function OnlineLobby() {
     void navigate({ to: "/online/$code", params: { code: normaliseMatchCode(code) } });
   };
 
+  const quick = async () => {
+    if (!online) {
+      toast.error("No internet connection");
+      return;
+    }
+    setBusy(true);
+    setError(null);
+    const { data, error: rpcError } = await supabase.rpc("quick_match");
+    setBusy(false);
+    if (rpcError || !data) {
+      setError(friendlyError(rpcError, "Couldn't find a match"));
+      return;
+    }
+    void navigate({ to: "/online/$code", params: { code: (data as unknown as { code: string }).code } });
+  };
+
   return (
     <Screen title="Online Multiplayer" subtitle="Play with a match code">
+      <button
+        type="button"
+        onClick={quick}
+        disabled={busy}
+        className="mb-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-4 font-display text-lg text-primary-foreground shadow-glow active:scale-[0.98] disabled:opacity-60"
+      >
+        {busy ? <Loader2 className="size-5 animate-spin" /> : <Zap className="size-5" />}
+        Quick Match
+      </button>
+      <p className="-mt-3 mb-5 text-center text-xs text-muted-foreground">
+        Get paired with any online player — or use a code to play a friend.
+      </p>
       <div className="mb-5 grid grid-cols-2 gap-2 rounded-2xl border border-border bg-surface p-1.5">
         {(["create", "join"] as const).map((t) => (
           <button
