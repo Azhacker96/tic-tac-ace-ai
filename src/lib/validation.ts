@@ -11,12 +11,12 @@ export function normaliseMatchCode(value: string): string {
   return value
     .toUpperCase()
     .replace(/[^A-Z0-9]/g, "")
-    .slice(0, 5);
+    .slice(0, 6);
 }
 
 export function validateMatchCode(value: string): string | null {
   const code = normaliseMatchCode(value);
-  if (code.length !== 5) return "Match codes are 5 characters";
+  if (code.length < 5 || code.length > 6) return "Match codes are 6 characters";
   return null;
 }
 

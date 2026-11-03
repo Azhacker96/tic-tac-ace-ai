@@ -285,16 +285,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [session?.user, updateSettings, fetchProfile],
   );
 
-  const recordResult = useCallback(
-    async (result: "win" | "loss" | "draw") => {
-      setStats(bumpStats(result));
-      if (session?.user && profile) {
-        await supabase.rpc("record_game_result", { p_result: result });
-        await fetchProfile(session.user.id);
-      }
-    },
-    [session?.user, profile, fetchProfile],
-  );
+  // Offline games only update local stats; account stats come from server-decided online matches.
+  const recordResult = useCallback(async (result: "win" | "loss" | "draw") => {
+    setStats(bumpStats(result));
+  }, []);
 
   const refreshProfile = useCallback(async () => {
     if (session?.user) await fetchProfile(session.user.id);

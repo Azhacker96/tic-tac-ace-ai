@@ -136,7 +136,7 @@ function OnlineLobby() {
             {busy ? "Creating…" : "Create match"}
           </button>
           <p className="text-center text-xs text-muted-foreground">
-            You&apos;ll get a 5-character code to share. Lobbies expire after 2 hours.
+            You&apos;ll get a 6-character code to share. Lobbies expire after 2 hours.
           </p>
         </div>
       ) : (
@@ -159,7 +159,7 @@ function OnlineLobby() {
               autoCapitalize="characters"
               autoCorrect="off"
               enterKeyHint="go"
-              maxLength={5}
+              maxLength={6}
               placeholder="ABCDE"
               className="mt-2 w-full rounded-2xl border border-input bg-surface px-4 py-4 text-center font-display text-2xl tracking-[0.3em] outline-none focus:border-primary"
             />
