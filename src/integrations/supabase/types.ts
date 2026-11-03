@@ -303,6 +303,7 @@ export type Database = {
           host_seen: string
           host_symbol: string
           id: string
+          is_public: boolean
           result: string | null
           round: number
           status: string
@@ -327,6 +328,7 @@ export type Database = {
           host_seen?: string
           host_symbol?: string
           id?: string
+          is_public?: boolean
           result?: string | null
           round?: number
           status?: string
@@ -351,6 +353,7 @@ export type Database = {
           host_seen?: string
           host_symbol?: string
           id?: string
+          is_public?: boolean
           result?: string | null
           round?: number
           status?: string
@@ -543,6 +546,7 @@ export type Database = {
           host_seen: string
           host_symbol: string
           id: string
+          is_public: boolean
           result: string | null
           round: number
           status: string
@@ -577,6 +581,7 @@ export type Database = {
           host_seen: string
           host_symbol: string
           id: string
+          is_public: boolean
           result: string | null
           round: number
           status: string
@@ -631,6 +636,7 @@ export type Database = {
           host_seen: string
           host_symbol: string
           id: string
+          is_public: boolean
           result: string | null
           round: number
           status: string
@@ -746,6 +752,7 @@ export type Database = {
           host_seen: string
           host_symbol: string
           id: string
+          is_public: boolean
           result: string | null
           round: number
           status: string
@@ -779,6 +786,7 @@ export type Database = {
           host_seen: string
           host_symbol: string
           id: string
+          is_public: boolean
           result: string | null
           round: number
           status: string
@@ -862,6 +870,7 @@ export type Database = {
           host_seen: string
           host_symbol: string
           id: string
+          is_public: boolean
           result: string | null
           round: number
           status: string
@@ -895,6 +904,7 @@ export type Database = {
           host_seen: string
           host_symbol: string
           id: string
+          is_public: boolean
           result: string | null
           round: number
           status: string
@@ -916,6 +926,40 @@ export type Database = {
         Returns: string
       }
       purchase_item: { Args: { p_item: string }; Returns: Json }
+      quick_match: {
+        Args: never
+        Returns: {
+          board: string
+          code: string
+          created_at: string
+          expires_at: string
+          guest_autopilot: boolean
+          guest_id: string | null
+          guest_rematch: boolean
+          guest_seen: string | null
+          host_autopilot: boolean
+          host_id: string
+          host_rematch: boolean
+          host_seen: string
+          host_symbol: string
+          id: string
+          is_public: boolean
+          result: string | null
+          round: number
+          status: string
+          turn: string
+          turn_deadline: string | null
+          updated_at: string
+          winner_id: string | null
+          winning_line: number[] | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "matches"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       request_rematch: {
         Args: { p_code: string }
         Returns: {
@@ -933,6 +977,7 @@ export type Database = {
           host_seen: string
           host_symbol: string
           id: string
+          is_public: boolean
           result: string | null
           round: number
           status: string
@@ -966,6 +1011,7 @@ export type Database = {
           host_seen: string
           host_symbol: string
           id: string
+          is_public: boolean
           result: string | null
           round: number
           status: string
@@ -1004,6 +1050,7 @@ export type Database = {
           host_seen: string
           host_symbol: string
           id: string
+          is_public: boolean
           result: string | null
           round: number
           status: string
@@ -1048,6 +1095,7 @@ export type Database = {
           host_seen: string
           host_symbol: string
           id: string
+          is_public: boolean
           result: string | null
           round: number
           status: string
