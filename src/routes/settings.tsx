@@ -108,7 +108,7 @@ function Settings() {
   return (
     <Screen title="Settings">
       <Section title="Audio">
-        <Row label="Music" hint="Background music during matches">
+        <Row label="Music" hint="Soft background music">
           <Toggle on={settings.music} onChange={(music) => updateSettings({ music })} />
         </Row>
         <Row label="Sound effects" hint="Taps, wins and timer warnings">
@@ -227,6 +227,11 @@ function Settings() {
       <Section title="About">
         <Row label="How to play" hint="Get three of your marks in a row — across, down or diagonal. Online turns last 20s; autopilot moves if time runs out." />
         <Row label="Coins" hint="Virtual coins only — no real-money value, can't be bought or withdrawn." />
+        <Row label="Privacy Policy" hint="What we store and why">
+          <Link to="/privacy" className="rounded-xl border border-border px-3 py-2 text-xs font-semibold">
+            Open
+          </Link>
+        </Row>
         <Row label="Version" hint="Tic Tac Arcade 1.0.0" />
       </Section>
 
