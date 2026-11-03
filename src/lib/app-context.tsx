@@ -12,7 +12,7 @@ import {
 
 import { lovable } from "@/integrations/lovable/index";
 import { supabase } from "@/integrations/supabase/client";
-import { setSfxEnabled } from "@/lib/sound";
+import { setMusicEnabled, setSfxEnabled } from "@/lib/sound";
 import { applyTheme, type ThemeId } from "@/lib/themes";
 import {
   DEFAULT_SETTINGS,
@@ -102,6 +102,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setSettings(s);
     applyTheme(s.theme);
     setSfxEnabled(s.sfx);
+    setMusicEnabled(s.music);
     setGuest(loadGuest());
     setStats(loadStats());
     setOnline(navigator.onLine);
@@ -263,6 +264,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     saveSettings(next);
     applyTheme(next.theme);
     setSfxEnabled(next.sfx);
+    setMusicEnabled(next.music);
   }, []);
 
   const updateSettings = useCallback(

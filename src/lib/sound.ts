@@ -126,3 +126,74 @@ export const sfx = {
     vibrate(6);
   },
 };
+
+/* ---------- Background music: soft synthesized arcade loop (no files, offline) ---------- */
+let musicOn = false;
+let musicTimer: ReturnType<typeof setInterval> | null = null;
+let musicGain: GainNode | null = null;
+let step = 0;
+const CHORDS = [
+  [220, 277, 330],
+  [196, 247, 294],
+  [175, 220, 262],
+  [196, 247, 294],
+];
+
+function musicNote(ac: AudioContext, freq: number, t: number, dur: number, g: number) {
+  if (!musicGain) return;
+  const osc = ac.createOscillator();
+  const vol = ac.createGain();
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(freq, t);
+  vol.gain.setValueAtTime(0.0001, t);
+  vol.gain.exponentialRampToValueAtTime(g, t + 0.05);
+  vol.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  osc.connect(vol).connect(musicGain);
+  osc.start(t);
+  osc.stop(t + dur + 0.05);
+}
+
+function startMusic() {
+  const ac = audio();
+  if (!ac || musicTimer) return;
+  if (!musicGain) {
+    musicGain = ac.createGain();
+    musicGain.gain.value = 0.35;
+    musicGain.connect(ac.destination);
+  }
+  const beat = 0.42;
+  musicTimer = setInterval(() => {
+    if (ac.state === "suspended") return; // waits for the first tap to unlock audio
+    const chord = CHORDS[Math.floor(step / 8) % CHORDS.length]!;
+    const t = ac.currentTime + 0.05;
+    if (step % 8 === 0) chord.forEach((f) => musicNote(ac, f / 2, t, beat * 7, 0.05));
+    musicNote(ac, chord[step % 3]! * 2, t, beat * 0.9, 0.035);
+    step++;
+  }, 420);
+}
+
+function stopMusic() {
+  if (musicTimer) clearInterval(musicTimer);
+  musicTimer = null;
+}
+
+/** Turn the background loop on/off (from the Settings toggle). Starts after the first user tap. */
+export function setMusicEnabled(value: boolean) {
+  musicOn = value;
+  if (typeof window === "undefined") return;
+  if (musicOn) {
+    startMusic();
+    const unlock = () => {
+      const ac = audio();
+      if (ac && ac.state === "suspended") void ac.resume();
+    };
+    window.addEventListener("pointerdown", unlock, { once: true });
+  } else stopMusic();
+}
+
+if (typeof document !== "undefined") {
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopMusic();
+    else if (musicOn) startMusic();
+  });
+}
