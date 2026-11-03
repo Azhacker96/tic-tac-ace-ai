@@ -911,59 +911,11 @@ export type Database = {
           isSetofReturn: false
         }
       }
-      merge_guest_stats: {
-        Args: { p_draws: number; p_losses: number; p_wins: number }
-        Returns: {
-          appear_offline: boolean
-          avatar: string
-          avatar_type: string
-          avatar_url: string | null
-          created_at: string
-          draws: number
-          guest_merged: boolean
-          id: string
-          last_seen: string
-          losses: number
-          nickname: string
-          player_id: string
-          wins: number
-        }
-        SetofOptions: {
-          from: "*"
-          to: "profiles"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
       profile_avatar: {
         Args: { p_avatar: string; p_type: string; p_url: string }
         Returns: string
       }
       purchase_item: { Args: { p_item: string }; Returns: Json }
-      record_game_result: {
-        Args: { p_result: string }
-        Returns: {
-          appear_offline: boolean
-          avatar: string
-          avatar_type: string
-          avatar_url: string | null
-          created_at: string
-          draws: number
-          guest_merged: boolean
-          id: string
-          last_seen: string
-          losses: number
-          nickname: string
-          player_id: string
-          wins: number
-        }
-        SetofOptions: {
-          from: "*"
-          to: "profiles"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
       request_rematch: {
         Args: { p_code: string }
         Returns: {

@@ -158,25 +158,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!session?.user) return;
     setProfileChecked(false);
     void fetchProfile(session.user.id).then(async (existing) => {
-      // A guest who just linked Google keeps their nickname, ID and stats.
+      // A guest who just linked Google keeps their nickname and Player ID.
       const pending = linkingGuest.current ?? loadGuest();
       if (existing) {
         // Returning user: same profile; refresh their Google picture.
         const { error } = await supabase.rpc("ensure_profile", {});
         if (!error) await fetchProfile(session.user.id);
       } else if (pending) {
-        const localStats = loadStats();
         const { data, error } = await supabase.rpc("ensure_profile", {
           p_nickname: pending.nickname,
           p_avatar: pending.avatar,
           p_player_id: pending.playerId,
         });
         if (!error && data) {
-          await supabase.rpc("merge_guest_stats", {
-            p_wins: localStats.wins,
-            p_losses: localStats.losses,
-            p_draws: localStats.draws,
-          });
           clearGuest();
           setGuest(null);
           linkingGuest.current = null;
