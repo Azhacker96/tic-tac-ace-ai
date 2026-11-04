@@ -11,6 +11,10 @@ import { useApp } from "@/lib/app-context";
  */
 export interface Wallet {
   balance: number;
+  gems: number;
+  ad_free: boolean;
+  ad_rewards_left: number;
+  interstitial_every: number;
   earned: number;
   spent: number;
   daily_amount: number;
@@ -27,6 +31,7 @@ export interface CoinTx {
   amount: number;
   balance_after: number;
   type: string;
+  currency: string;
   reference: string | null;
   created_at: string;
 }
@@ -39,6 +44,7 @@ export interface ShopItem {
   category: ShopCategory;
   preview: string;
   price: number;
+  gem_price: number | null;
   active: boolean;
   sort: number;
 }
@@ -59,6 +65,10 @@ export const TX_LABELS: Record<string, string> = {
   shop_purchase: "Shop Purchase",
   lucky_spin: "Lucky Spin",
   gift_sent: "Gift Sent",
+  welcome_gems: "Welcome Gift",
+  gem_purchase: "Shop Purchase (Gems)",
+  ad_double_win: "2x Win Bonus",
+  ad_daily_double: "2x Daily Bonus",
 };
 
 export const CATEGORY_LABELS: Record<ShopCategory, string> = {
@@ -97,7 +107,7 @@ export function useTransactions() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("coin_transactions")
-        .select("id, amount, balance_after, type, reference, created_at")
+        .select("id, amount, balance_after, type, currency, reference, created_at")
         .order("created_at", { ascending: false })
         .limit(200);
       if (error) throw error;
@@ -115,7 +125,7 @@ export function useShopItems() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("shop_items")
-        .select("id, name, category, preview, price, active, sort")
+        .select("id, name, category, preview, price, gem_price, active, sort")
         .order("sort");
       if (error) throw error;
       return (data ?? []) as ShopItem[];
@@ -165,4 +175,47 @@ export function formatCountdown(targetMs: number, nowMs: number): string {
   const sec = s % 60;
   if (d > 0) return `${d}d ${h}h ${m}m`;
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+}
+
+export interface IapProduct {
+  id: string;
+  name: string;
+  coins: number;
+  gems: number;
+  ad_free: boolean;
+  price_label: string;
+  badge: string | null;
+}
+
+export function useIapProducts() {
+  const userId = useCoinUser();
+  return useQuery({
+    queryKey: ["coins", userId, "iap"],
+    enabled: Boolean(userId),
+    staleTime: 300_000,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("iap_products")
+        .select("id, name, coins, gems, ad_free, price_label, badge")
+        .eq("active", true)
+        .order("sort");
+      if (error) throw error;
+      return (data ?? []) as IapProduct[];
+    },
+  });
+}
+
+/**
+ * Rewarded bonus: plays a rewarded ad (skipped for Ad-Free VIP users), then the
+ * server validates and credits it once. Returns true when coins were added.
+ */
+export async function claimAdReward(kind: "double_win" | "daily_double", adFree: boolean, ref?: string) {
+  if (!adFree) {
+    const { showAd } = await import("@/lib/ads");
+    const watched = await showAd("rewarded");
+    if (!watched) return { ok: false as const, error: "Watch the full ad to get the bonus" };
+  }
+  const { error } = await supabase.rpc("claim_ad_reward", ref ? { p_kind: kind, p_ref: ref } : { p_kind: kind });
+  if (error) return { ok: false as const, error: error.message };
+  return { ok: true as const };
 }

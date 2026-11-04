@@ -1,6 +1,12 @@
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+
 
 import { Confetti } from "@/components/game/Confetti";
+import { noteGameFinished } from "@/lib/ads";
+import { claimAdReward, useRefreshCoins, useWallet } from "@/lib/coins";
+import { sfx } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 
 export type Outcome = "win" | "loss" | "draw";
@@ -12,6 +18,8 @@ interface ResultSheetProps {
   detail?: string | undefined;
   stats?: { wins: number; losses: number; draws: number } | undefined;
   children?: ReactNode;
+  /** Server reference of an online win (match:id:round) — enables the 2x coins bonus. */
+  winRef?: string | undefined;
 }
 
 const COPY: Record<Outcome, { emoji: string; tone: string }> = {
@@ -27,8 +35,35 @@ export function ResultSheet({
   detail,
   stats,
   children,
+  winRef,
 }: ResultSheetProps) {
+  const wallet = useWallet();
+  const refresh = useRefreshCoins();
+  const adFree = wallet.data?.ad_free ?? false;
+  const counted = useRef(false);
+  const [doubled, setDoubled] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (!open) { counted.current = false; return; }
+    if (counted.current) return;
+    counted.current = true;
+    noteGameFinished(adFree, wallet.data?.interstitial_every ?? 3);
+  }, [open, adFree, wallet.data?.interstitial_every]);
+
   if (!open) return null;
+  const canDouble = outcome === "win" && winRef && doubled !== winRef && wallet.data && wallet.data.ad_rewards_left > 0;
+  const double = async () => {
+    if (!winRef) return;
+    setBusy(true);
+    const r = await claimAdReward("double_win", adFree, winRef);
+    setBusy(false);
+    if (!r.ok) { toast.error(r.error); return; }
+    setDoubled(winRef);
+    void refresh();
+    try { sfx.coin(); } catch { /* optional */ }
+    toast.success(`+${wallet.data?.win_reward ?? 0} bonus coins`);
+  };
   const { emoji, tone } = COPY[outcome];
 
   return (
@@ -56,7 +91,19 @@ export function ResultSheet({
           </div>
         ) : null}
 
-        <div className="mt-5 grid gap-2 pb-5">{children}</div>
+        <div className="mt-5 grid gap-2 pb-5">
+          {canDouble ? (
+            <button
+              type="button"
+              onClick={double}
+              disabled={busy}
+              className="flex items-center justify-center gap-2 rounded-2xl bg-accent px-4 py-3.5 font-semibold text-accent-foreground disabled:opacity-60"
+            >
+              {busy ? <Loader2 className="size-4 animate-spin" /> : adFree ? "👑 Claim 2x coins" : "🎬 Watch ad · 2x coins"}
+            </button>
+          ) : null}
+          {children}
+        </div>
       </div>
     </div>
   );

@@ -58,6 +58,7 @@ export type Database = {
           amount: number
           balance_after: number
           created_at: string
+          currency: string
           id: string
           reference: string | null
           type: string
@@ -67,6 +68,7 @@ export type Database = {
           amount: number
           balance_after: number
           created_at?: string
+          currency?: string
           id?: string
           reference?: string | null
           type: string
@@ -76,6 +78,7 @@ export type Database = {
           amount?: number
           balance_after?: number
           created_at?: string
+          currency?: string
           id?: string
           reference?: string | null
           type?: string
@@ -85,9 +88,11 @@ export type Database = {
       }
       coin_wallets: {
         Row: {
+          ad_free: boolean
           balance: number
           created_at: string
           earned: number
+          gems: number
           last_daily_claim: string | null
           last_spin: string | null
           last_weekly_claim: string | null
@@ -96,9 +101,11 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          ad_free?: boolean
           balance?: number
           created_at?: string
           earned?: number
+          gems?: number
           last_daily_claim?: string | null
           last_spin?: string | null
           last_weekly_claim?: string | null
@@ -107,9 +114,11 @@ export type Database = {
           user_id: string
         }
         Update: {
+          ad_free?: boolean
           balance?: number
           created_at?: string
           earned?: number
+          gems?: number
           last_daily_claim?: string | null
           last_spin?: string | null
           last_weekly_claim?: string | null
@@ -169,6 +178,42 @@ export type Database = {
           id?: string
           name?: string
           price?: number
+          sort?: number
+        }
+        Relationships: []
+      }
+      iap_products: {
+        Row: {
+          active: boolean
+          ad_free: boolean
+          badge: string | null
+          coins: number
+          gems: number
+          id: string
+          name: string
+          price_label: string
+          sort: number
+        }
+        Insert: {
+          active?: boolean
+          ad_free?: boolean
+          badge?: string | null
+          coins?: number
+          gems?: number
+          id: string
+          name: string
+          price_label: string
+          sort?: number
+        }
+        Update: {
+          active?: boolean
+          ad_free?: boolean
+          badge?: string | null
+          coins?: number
+          gems?: number
+          id?: string
+          name?: string
+          price_label?: string
           sort?: number
         }
         Relationships: []
@@ -418,6 +463,7 @@ export type Database = {
           active: boolean
           category: string
           created_at: string
+          gem_price: number | null
           id: string
           name: string
           preview: string
@@ -428,6 +474,7 @@ export type Database = {
           active?: boolean
           category: string
           created_at?: string
+          gem_price?: number | null
           id: string
           name: string
           preview: string
@@ -438,6 +485,7 @@ export type Database = {
           active?: boolean
           category?: string
           created_at?: string
+          gem_price?: number | null
           id?: string
           name?: string
           preview?: string
@@ -562,6 +610,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      claim_ad_reward: {
+        Args: { p_kind: string; p_ref?: string }
+        Returns: Json
       }
       claim_bonus: { Args: { p_kind: string }; Returns: Json }
       claim_timeout: {
@@ -689,6 +741,15 @@ export type Database = {
           nickname: string
           player_id: string
         }[]
+      }
+      gem_apply: {
+        Args: {
+          p_amount: number
+          p_ref: string
+          p_type: string
+          p_user: string
+        }
+        Returns: number
       }
       generate_player_id: { Args: never; Returns: string }
       get_friends_leaderboard: {

@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
 import { BottomNav, useHasBottomNav } from "@/components/BottomNav";
+import { AdHost } from "@/components/AdHost";
 import { LuckySpin } from "@/components/LuckySpin";
 import { PlayerSheet } from "@/components/PlayerSheet";
 import { AppProvider } from "@/lib/app-context";
@@ -146,6 +147,7 @@ function RootComponent() {
         <BottomNav />
         <PlayerSheet />
         <LuckySpin />
+        <AdHost />
         <Toaster position="top-center" />
       </AppProvider>
     </QueryClientProvider>
