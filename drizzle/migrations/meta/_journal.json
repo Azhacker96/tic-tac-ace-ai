@@ -71,6 +71,13 @@
       "when": 1793722227427,
       "tag": "0009_quick_match",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793811139200,
+      "tag": "0010_gems_ads_bundles",
+      "breakpoints": true
     }
   ]
 }
