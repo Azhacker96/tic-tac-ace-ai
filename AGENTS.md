@@ -21,3 +21,6 @@
 - Leaderboards come from SECURITY DEFINER RPCs (get_global_leaderboard/get_friends_leaderboard/get_head_to_head) over server-owned profile stats and finished matches — rankings can't be faked client-side.
 - Account win/loss stats change only through server-decided online matches; offline results stay local and never merge into the account — prevents leaderboard faking.
 - Match codes are 6 characters generated with `gen_random_bytes` (32-symbol alphabet); `join_match` also accepts legacy 5-character codes.
+- Gems live in `coin_wallets.gems` and share the `coin_transactions` ledger (`currency`='gem'); gem-only shop items use `shop_items.gem_price`. No gem→coin exchange.
+- Rewarded-ad bonuses go through `claim_ad_reward` (one per win/daily, capped per 24h by `coin_config.ad_daily_cap`); Ad-Free users skip the video but get the same server-checked bonus. Real-money packs live in `iap_products` and must only be granted by a verified Google Play purchase handler (not built yet).
+- `src/lib/ads.ts` uses `window.TTTAds` (native AdMob bridge) when present, else a labelled web test ad.
