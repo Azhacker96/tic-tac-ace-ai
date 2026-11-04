@@ -60,6 +60,12 @@ export function CoinBadge({ className, link = true }: { className?: string; link
           {data?.balance ?? 0}
         </span>
       )}
+      {data ? (
+        <>
+          <span aria-hidden className="ml-1">💎</span>
+          <span className="tabular-nums">{data.gems}</span>
+        </>
+      ) : null}
       {delta ? (
         <span
           key={delta.k}

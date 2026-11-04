@@ -10,6 +10,7 @@ import { useApp } from "@/lib/app-context";
 import { sfx } from "@/lib/sound";
 import {
   CATEGORY_LABELS,
+  useIapProducts,
   useInventory,
   useRefreshCoins,
   useShopItems,
@@ -72,7 +73,8 @@ function Shop() {
   const inv = useInventory();
   const wallet = useWallet();
   const refresh = useRefreshCoins();
-  const [cat, setCat] = useState<ShopCategory>("board");
+  const [cat, setCat] = useState<ShopCategory | "bundles">("board");
+  const iap = useIapProducts();
   const [busy, setBusy] = useState<string | null>(null);
 
   if (identity && identity.kind !== "google") {
@@ -87,9 +89,11 @@ function Shop() {
   const list = (items.data ?? []).filter((i) => i.category === cat && (i.active || owned.has(i.id)));
   const usedCats = CATS.filter((c) => c !== "other" || (items.data ?? []).some((i) => i.category === "other"));
 
+  const afford = (item: ShopItem) =>
+    item.gem_price != null ? (wallet.data?.gems ?? 0) >= item.gem_price : (wallet.data?.balance ?? 0) >= item.price;
   const buy = async (item: ShopItem) => {
-    if ((wallet.data?.balance ?? 0) < item.price) {
-      toast.error("Not enough coins");
+    if (!afford(item)) {
+      toast.error(item.gem_price != null ? "Not enough gems" : "Not enough coins");
       return;
     }
     setBusy(item.id);
@@ -129,9 +133,56 @@ function Shop() {
             {CATEGORY_LABELS[c]}
           </button>
         ))}
+        <button
+          type="button"
+          onClick={() => setCat("bundles")}
+          className={cn(
+            "shrink-0 rounded-xl border px-3 py-2 text-xs font-semibold",
+            cat === "bundles" ? "border-primary bg-primary text-primary-foreground" : "border-border bg-surface text-muted-foreground",
+          )}
+        >
+          💎 Gems & Bundles
+        </button>
       </div>
 
-      {items.isLoading || inv.isLoading ? (
+      {cat === "bundles" ? (
+        iap.isLoading ? (
+          <div className="flex justify-center py-10"><Loader2 className="size-6 animate-spin text-muted-foreground" /></div>
+        ) : (
+          <ul className="grid gap-2.5">
+            {(iap.data ?? []).map((p) => {
+              const owned = p.ad_free && wallet.data?.ad_free;
+              return (
+                <li key={p.id} className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3">
+                  <span className="text-3xl">{p.ad_free ? "👑" : p.coins > 0 ? "🎁" : "💎"}</span>
+                  <div className="min-w-0 flex-1">
+                    <p className="flex items-center gap-2 font-semibold">
+                      {p.name}
+                      {p.badge ? <span className="rounded-md bg-accent px-1.5 py-0.5 text-[10px] text-accent-foreground">{p.badge}</span> : null}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {p.ad_free
+                        ? "No forced ads · instant 2x bonuses without videos"
+                        : [p.coins ? `🪙 ${p.coins}` : null, p.gems ? `💎 ${p.gems}` : null].filter(Boolean).join(" + ")}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={Boolean(owned)}
+                    onClick={() => toast.info("Purchases open in the Android app via Google Play.")}
+                    className="shrink-0 rounded-xl bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-50"
+                  >
+                    {owned ? "Owned" : p.price_label}
+                  </button>
+                </li>
+              );
+            })}
+            <p className="mt-1 text-center text-[11px] text-muted-foreground">
+              Paid through Google Play in the Android app. Gems can&apos;t be exchanged for coins.
+            </p>
+          </ul>
+        )
+      ) : items.isLoading || inv.isLoading ? (
         <div className="flex justify-center py-10"><Loader2 className="size-6 animate-spin text-muted-foreground" /></div>
       ) : items.isError ? (
         <div className="rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">Couldn&apos;t load the shop.</div>
@@ -141,7 +192,7 @@ function Shop() {
         <ul className="grid grid-cols-2 gap-2.5">
           {list.map((item) => {
             const row = owned.get(item.id);
-            const canAfford = (wallet.data?.balance ?? 0) >= item.price;
+            const canAfford = afford(item);
             return (
               <li key={item.id} className={cn("flex flex-col items-center gap-2 rounded-2xl border bg-surface p-3 text-center", row?.equipped ? "border-primary" : "border-border")}>
                 <div className={cn("flex items-center justify-center", item.category === "board" ? "w-full" : "h-16")}><Preview item={item} /></div>
@@ -165,7 +216,7 @@ function Shop() {
                     onClick={() => buy(item)}
                     className="flex w-full items-center justify-center rounded-xl bg-primary py-2 text-xs font-semibold text-primary-foreground disabled:opacity-50"
                   >
-                    {busy === item.id ? <Loader2 className="size-4 animate-spin" /> : `🪙 ${item.price}`}
+                    {busy === item.id ? <Loader2 className="size-4 animate-spin" /> : item.gem_price != null ? `💎 ${item.gem_price}` : `🪙 ${item.price}`}
                   </button>
                 )}
               </li>
