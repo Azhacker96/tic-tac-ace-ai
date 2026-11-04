@@ -67,7 +67,34 @@ function BonusCard({ kind, wallet, now }: { kind: "daily" | "weekly"; wallet: Wa
       >
         {busy ? <Loader2 className="size-4 animate-spin" /> : available ? "Claim" : "Claimed"}
       </button>
+      {kind === "daily" && !available ? <DoubleDaily wallet={wallet} /> : null}
     </div>
+  );
+}
+
+function DoubleDaily({ wallet }: { wallet: Wallet }) {
+  const refresh = useRefreshCoins();
+  const [busy, setBusy] = useState(false);
+  const [done, setDone] = useState(false);
+  if (done || wallet.ad_rewards_left <= 0) return null;
+  const go = async () => {
+    setBusy(true);
+    const r = await claimAdReward("daily_double", wallet.ad_free);
+    setBusy(false);
+    if (!r.ok) {
+      if (/already claimed/i.test(r.error)) setDone(true);
+      toast.error(r.error);
+      return;
+    }
+    setDone(true);
+    void refresh();
+    try { sfx.coin(); } catch { /* optional */ }
+    toast.success(`+${wallet.daily_amount} bonus coins`);
+  };
+  return (
+    <button type="button" onClick={go} disabled={busy} className="mt-2 flex w-full items-center justify-center rounded-xl bg-accent py-2 text-xs font-semibold text-accent-foreground disabled:opacity-50">
+      {busy ? <Loader2 className="size-4 animate-spin" /> : wallet.ad_free ? "👑 2x daily" : "🎬 Ad · 2x daily"}
+    </button>
   );
 }
 
@@ -131,7 +158,7 @@ function CoinsScreen() {
               </div>
               <div className="text-right">
                 <p className={cn("font-display", t.amount > 0 ? "text-success" : t.amount < 0 ? "text-destructive" : "text-muted-foreground")}>
-                  {t.amount > 0 ? `+${t.amount}` : t.amount}
+                  {t.amount > 0 ? `+${t.amount}` : t.amount}{t.currency === "gem" ? " 💎" : ""}
                 </p>
                 <p className="text-[11px] text-muted-foreground">Bal {t.balance_after}</p>
               </div>

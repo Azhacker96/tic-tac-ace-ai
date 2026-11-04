@@ -531,6 +531,7 @@ function OnlineMatch() {
             : undefined
         }
         stats={identity?.stats}
+        winRef={outcome === "win" ? `match:${match.id}:${match.round}` : undefined}
       >
         {opp ? (
           <div className="flex items-center gap-3 rounded-2xl border border-border bg-background p-3">
