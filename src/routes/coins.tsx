@@ -8,7 +8,7 @@ import { CoinBadge } from "@/components/CoinBadge";
 import { EmptyState, RequiresGoogle, Screen } from "@/components/Screen";
 import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/lib/app-context";
-import { TX_LABELS, claimAdReward, formatCountdown, useRefreshCoins, useTransactions, useWallet, type Wallet } from "@/lib/coins";
+import { TX_LABELS, formatCountdown, useRefreshCoins, useTransactions, useWallet, type Wallet } from "@/lib/coins";
 import { sfx } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { friendlyError } from "@/lib/validation";
