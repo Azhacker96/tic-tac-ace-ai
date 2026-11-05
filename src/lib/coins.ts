@@ -69,6 +69,7 @@ export const TX_LABELS: Record<string, string> = {
   gem_purchase: "Shop Purchase (Gems)",
   ad_double_win: "2x Win Bonus",
   ad_daily_double: "2x Daily Bonus",
+  ad_double_spin: "2x Spin Bonus",
 };
 
 export const CATEGORY_LABELS: Record<ShopCategory, string> = {
@@ -209,7 +210,7 @@ export function useIapProducts() {
  * Rewarded bonus: plays a rewarded ad (skipped for Ad-Free VIP users), then the
  * server validates and credits it once. Returns true when coins were added.
  */
-export async function claimAdReward(kind: "double_win" | "daily_double", adFree: boolean, ref?: string) {
+export async function claimAdReward(kind: "double_win" | "double_spin", adFree: boolean, ref?: string) {
   if (!adFree) {
     const { showAd } = await import("@/lib/ads");
     const watched = await showAd("rewarded");
