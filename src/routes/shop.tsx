@@ -118,7 +118,7 @@ function Shop() {
   };
 
   return (
-    <Screen title="Shop" subtitle="Cosmetics only · virtual coins" action={<CoinBadge />}>
+    <Screen title="Shop" subtitle="Skins, avatars & frames" action={<CoinBadge />}>
       <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1">
         {usedCats.map((c) => (
           <button
@@ -177,9 +177,6 @@ function Shop() {
                 </li>
               );
             })}
-            <p className="mt-1 text-center text-[11px] text-muted-foreground">
-              Paid through Google Play in the Android app. Gems can&apos;t be exchanged for coins.
-            </p>
           </ul>
         )
       ) : items.isLoading || inv.isLoading ? (

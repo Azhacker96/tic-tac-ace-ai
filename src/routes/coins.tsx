@@ -1,14 +1,14 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { CoinBadge } from "@/components/CoinBadge";
-import { EmptyState, RequiresGoogle, Screen } from "@/components/Screen";
+import { RequiresGoogle, Screen } from "@/components/Screen";
 import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/lib/app-context";
-import { TX_LABELS, formatCountdown, useRefreshCoins, useTransactions, useWallet, type Wallet } from "@/lib/coins";
+import { formatCountdown, useIapProducts, useRefreshCoins, useWallet, type Wallet } from "@/lib/coins";
 import { sfx } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { friendlyError } from "@/lib/validation";
@@ -18,9 +18,9 @@ export const Route = createFileRoute("/coins")({
   head: () => ({
     meta: [
       { title: "Rewards & Coins — Tic Tac Arcade" },
-      { name: "description", content: "Claim daily and weekly coin bonuses and review your coin history." },
+      { name: "description", content: "Claim daily and weekly coin bonuses and browse gem packs and bundles." },
       { property: "og:title", content: "Rewards & Coins — Tic Tac Arcade" },
-      { property: "og:description", content: "Daily and weekly bonuses and coin history." },
+      { property: "og:description", content: "Daily and weekly bonuses, gems and bundles." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -83,7 +83,7 @@ function BonusCard({ kind, wallet, now }: { kind: "daily" | "weekly"; wallet: Wa
 function CoinsScreen() {
   const { identity } = useApp();
   const wallet = useWallet();
-  const txs = useTransactions();
+  const iap = useIapProducts();
   const [now, setNow] = useState(() => Date.now());
   const [skew, setSkew] = useState(0);
 
@@ -104,7 +104,7 @@ function CoinsScreen() {
   }
 
   return (
-    <Screen title="Rewards & Coins" subtitle="Virtual coins · no real-money value" action={<CoinBadge link={false} />}>
+    <Screen title="Rewards & Coins" subtitle="Daily bonuses & special packs" action={<CoinBadge link={false} />}>
       {wallet.isError ? (
         <div className="rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
           Couldn&apos;t load your wallet. Check your connection.
@@ -125,32 +125,41 @@ function CoinsScreen() {
         </>
       )}
 
-      <h2 className="mb-2 mt-6 font-display text-base">Coin history</h2>
-      {txs.isLoading ? (
+      <div className="mb-2 mt-6 flex items-center justify-between">
+        <h2 className="font-display text-base">💎 Gems & Bundles</h2>
+        <Link to="/shop" className="text-xs font-semibold text-primary">Open Shop</Link>
+      </div>
+      {iap.isLoading ? (
         <div className="flex justify-center py-6"><Loader2 className="size-5 animate-spin text-muted-foreground" /></div>
-      ) : !txs.data || txs.data.length === 0 ? (
-        <EmptyState icon="🪙" title="No transactions yet" />
       ) : (
         <ul className="grid gap-2">
-          {txs.data.map((t) => (
-            <li key={t.id} className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3">
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold">{TX_LABELS[t.type] ?? t.type}</p>
-                <p className="text-[11px] text-muted-foreground">{new Date(t.created_at).toLocaleString()}</p>
-              </div>
-              <div className="text-right">
-                <p className={cn("font-display", t.amount > 0 ? "text-success" : t.amount < 0 ? "text-destructive" : "text-muted-foreground")}>
-                  {t.amount > 0 ? `+${t.amount}` : t.amount}{t.currency === "gem" ? " 💎" : ""}
-                </p>
-                <p className="text-[11px] text-muted-foreground">Bal {t.balance_after}</p>
-              </div>
-            </li>
-          ))}
+          {(iap.data ?? []).map((p) => {
+            const owned = p.ad_free && wallet.data?.ad_free;
+            return (
+              <li key={p.id} className="flex items-center gap-3 rounded-2xl border border-border bg-surface p-3">
+                <span className="text-3xl">{p.ad_free ? "👑" : p.coins > 0 ? "🎁" : "💎"}</span>
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-2 font-semibold">
+                    {p.name}
+                    {p.badge ? <span className="rounded-md bg-accent px-1.5 py-0.5 text-[10px] text-accent-foreground">{p.badge}</span> : null}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {p.ad_free ? "No forced ads · instant bonuses" : [p.coins ? `🪙 ${p.coins}` : null, p.gems ? `💎 ${p.gems}` : null].filter(Boolean).join(" + ")}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  disabled={Boolean(owned)}
+                  onClick={() => toast.info("Purchases open in the Android app via Google Play.")}
+                  className="shrink-0 rounded-xl bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-50"
+                >
+                  {owned ? "Owned" : p.price_label}
+                </button>
+              </li>
+            );
+          })}
         </ul>
       )}
-      <p className="mt-6 text-center text-[11px] text-muted-foreground">
-        Online match results earn or cost coins. Offline games don&apos;t, so coins can&apos;t be farmed.
-      </p>
     </Screen>
   );
 }

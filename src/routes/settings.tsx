@@ -226,7 +226,7 @@ function Settings() {
 
       <Section title="About">
         <Row label="How to play" hint="Get three of your marks in a row — across, down or diagonal. Online turns last 20s; autopilot moves if time runs out." />
-        <Row label="Coins" hint="Virtual coins only — no real-money value, can't be bought or withdrawn." />
+        <Row label="Coins" hint="Earn coins from online wins and daily rewards." />
         <Row label="Privacy Policy" hint="What we store and why">
           <Link to="/privacy" className="rounded-xl border border-border px-3 py-2 text-xs font-semibold">
             Open
