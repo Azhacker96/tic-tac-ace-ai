@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useApp } from "@/lib/app-context";
-import { formatCountdown, useRefreshCoins } from "@/lib/coins";
+import { claimAdReward, formatCountdown, useRefreshCoins, useWallet } from "@/lib/coins";
 import { sfx, vibrate } from "@/lib/sound";
 import { friendlyError } from "@/lib/validation";
 
@@ -25,6 +25,9 @@ export function LuckySpin() {
   const [next, setNext] = useState<string | null>(null);
   const [now, setNow] = useState(Date.now());
   const tickRef = useRef<number | null>(null);
+  const wallet = useWallet();
+  const [doubling, setDoubling] = useState(false);
+  const [doubled, setDoubled] = useState(false);
 
   const prizes = useQuery({
     queryKey: ["spin", "prizes"],
@@ -96,6 +99,18 @@ export function LuckySpin() {
     }, 4200);
   };
 
+  const doubleIt = async () => {
+    if (won === null) return;
+    setDoubling(true);
+    const r = await claimAdReward("double_spin", wallet.data?.ad_free ?? false);
+    setDoubling(false);
+    if (!r.ok) { toast.error(r.error); if (/already/i.test(r.error)) setDoubled(true); return; }
+    setDoubled(true);
+    setWon(won * 2);
+    try { sfx.coin(); } catch { /* optional */ }
+    void refreshCoins();
+  };
+
   const gradient = `conic-gradient(${list.map((_, i) => `${COLORS[i % COLORS.length]} ${i * seg}deg ${(i + 1) * seg}deg`).join(",")})`;
 
   return (
@@ -132,7 +147,12 @@ export function LuckySpin() {
           <div className="mt-5">
             <p className="font-display text-2xl text-accent animate-in zoom-in">+{won} coins! 🎉</p>
             {next ? <p className="mt-1 text-xs text-muted-foreground">Next spin in {formatCountdown(new Date(next).getTime(), now)}</p> : null}
-            <button type="button" onClick={() => setOpen(false)} className="mt-4 h-12 w-full rounded-2xl bg-primary font-semibold text-primary-foreground active:scale-95">Collect</button>
+            {!doubled ? (
+              <button type="button" disabled={doubling} onClick={doubleIt} className="mt-4 flex h-12 w-full items-center justify-center rounded-2xl bg-accent font-semibold text-accent-foreground active:scale-95 disabled:opacity-60">
+                {doubling ? <Loader2 className="size-5 animate-spin" /> : wallet.data?.ad_free ? "👑 Claim 2x" : "🎬 Watch ad · 2x"}
+              </button>
+            ) : null}
+            <button type="button" onClick={() => setOpen(false)} className="mt-2 h-12 w-full rounded-2xl bg-primary font-semibold text-primary-foreground active:scale-95">Collect</button>
           </div>
         ) : (
           <button

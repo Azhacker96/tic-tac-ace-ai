@@ -78,6 +78,13 @@
       "when": 1793811139200,
       "tag": "0010_gems_ads_bundles",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793889259656,
+      "tag": "0011_spin_double_ad",
+      "breakpoints": true
     }
   ]
 }
