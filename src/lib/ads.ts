@@ -22,6 +22,11 @@ function nativeAds(): AdMobLike | null {
 }
 
 export function showAd(kind: AdKind): Promise<boolean> {
+  const cfg = typeof window !== "undefined"
+    ? (window as unknown as { TTTConfig?: { admob?: { enabled?: boolean } } }).TTTConfig
+    : undefined;
+  // Admin master switch: ads off → interstitials skip, rewarded bonuses granted without a video.
+  if (cfg?.admob?.enabled === false) return Promise.resolve(true);
   const native = nativeAds();
   if (native) {
     if (kind === "rewarded" && native.showRewarded) return native.showRewarded();

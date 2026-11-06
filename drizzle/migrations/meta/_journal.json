@@ -92,6 +92,13 @@
       "when": 1793977107531,
       "tag": "0012_tighten_friend_and_iap_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1793978612905,
+      "tag": "0013_admin_panel",
+      "breakpoints": true
     }
   ]
 }
