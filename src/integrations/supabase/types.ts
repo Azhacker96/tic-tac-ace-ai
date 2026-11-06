@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       blocked_users: {
         Row: {
           blocked_id: string
@@ -191,6 +209,7 @@ export type Database = {
           gems: number
           id: string
           name: string
+          play_product_id: string | null
           price_label: string
           sort: number
         }
@@ -202,6 +221,7 @@ export type Database = {
           gems?: number
           id: string
           name: string
+          play_product_id?: string | null
           price_label: string
           sort?: number
         }
@@ -213,6 +233,7 @@ export type Database = {
           gems?: number
           id?: string
           name?: string
+          play_product_id?: string | null
           price_label?: string
           sort?: number
         }
@@ -544,6 +565,24 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_settings: {
         Row: {
           dark_mode: boolean
@@ -576,6 +615,84 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_adjust_wallet: {
+        Args: {
+          p_coins: number
+          p_gems: number
+          p_reason: string
+          p_user: string
+        }
+        Returns: Json
+      }
+      admin_analytics: { Args: never; Returns: Json }
+      admin_broadcast_gift: {
+        Args: { p_coins: number; p_gems: number; p_title: string }
+        Returns: number
+      }
+      admin_economy: { Args: never; Returns: Json }
+      admin_guard: { Args: never; Returns: undefined }
+      admin_list_users: {
+        Args: { p_limit?: number; p_search: string }
+        Returns: {
+          ad_free: boolean
+          coins: number
+          created_at: string
+          draws: number
+          email: string
+          gems: number
+          is_admin: boolean
+          last_seen: string
+          losses: number
+          nickname: string
+          player_id: string
+          user_id: string
+          wins: number
+        }[]
+      }
+      admin_reset_cooldowns: { Args: { p_user: string }; Returns: undefined }
+      admin_set_ad_free: {
+        Args: { p_on: boolean; p_user: string }
+        Returns: undefined
+      }
+      admin_set_config: {
+        Args: { p_key: string; p_value: number }
+        Returns: undefined
+      }
+      admin_set_setting: {
+        Args: { p_key: string; p_value: Json }
+        Returns: undefined
+      }
+      admin_update_iap: {
+        Args: {
+          p_active: boolean
+          p_badge: string
+          p_coins: number
+          p_gems: number
+          p_id: string
+          p_name: string
+          p_play_id: string
+          p_price_label: string
+        }
+        Returns: undefined
+      }
+      admin_update_shop_item: {
+        Args: {
+          p_active: boolean
+          p_gem_price: number
+          p_id: string
+          p_price: number
+        }
+        Returns: undefined
+      }
+      admin_update_spin: {
+        Args: {
+          p_amount: number
+          p_label: string
+          p_slot: number
+          p_weight: number
+        }
+        Returns: undefined
+      }
       block_player: { Args: { p_user_id: string }; Returns: undefined }
       claim_abandon: {
         Args: { p_code: string }
@@ -795,6 +912,13 @@ export type Database = {
       }
       get_player_card: { Args: { p_user: string }; Returns: Json }
       get_wallet: { Args: never; Returns: Json }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       heartbeat: { Args: never; Returns: undefined }
       invite_friend: {
         Args: { p_user_id: string }
@@ -830,6 +954,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      is_admin: { Args: never; Returns: boolean }
       join_match: {
         Args: { p_code: string }
         Returns: {
@@ -1177,6 +1302,7 @@ export type Database = {
       wallet_json: { Args: { p_user: string }; Returns: Json }
     }
     Enums: {
+      app_role: "admin" | "moderator" | "user"
       friend_status: "pending" | "accepted"
     }
     CompositeTypes: {
@@ -1305,6 +1431,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "moderator", "user"],
       friend_status: ["pending", "accepted"],
     },
   },
