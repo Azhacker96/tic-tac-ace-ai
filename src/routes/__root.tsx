@@ -12,12 +12,11 @@ import { useEffect, type ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
 import { useAppSettings, useIsAdmin } from "@/lib/app-settings";
-import { useApp } from "@/lib/app-context";
 import { BottomNav, useHasBottomNav } from "@/components/BottomNav";
 import { AdHost } from "@/components/AdHost";
 import { LuckySpin } from "@/components/LuckySpin";
 import { PlayerSheet } from "@/components/PlayerSheet";
-import { AppProvider } from "@/lib/app-context";
+import { AppProvider, useApp } from "@/lib/app-context";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
