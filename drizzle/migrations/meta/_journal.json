@@ -85,6 +85,13 @@
       "when": 1793889259656,
       "tag": "0011_spin_double_ad",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1793977107531,
+      "tag": "0012_tighten_friend_and_iap_policies",
+      "breakpoints": true
     }
   ]
 }
