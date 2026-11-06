@@ -4,6 +4,7 @@ import { toast } from "sonner";
 
 import { LoadingScreen, Screen } from "@/components/Screen";
 import { useApp } from "@/lib/app-context";
+import { useIsAdmin } from "@/lib/app-settings";
 import { getHapticsEnabled, setHapticsEnabled, sfx, vibrate } from "@/lib/sound";
 import { THEMES } from "@/lib/themes";
 import { cn } from "@/lib/utils";
@@ -233,6 +234,7 @@ function Settings() {
           </Link>
         </Row>
         <Row label="Version" hint="Tic Tac Arcade 1.0.0" />
+        <AdminRow />
       </Section>
 
       <p className="pb-4 text-center text-[11px] text-muted-foreground">
@@ -271,5 +273,18 @@ function Settings() {
         </div>
       ) : null}
     </Screen>
+  );
+}
+
+function AdminRow() {
+  const { session } = useApp();
+  const { data: isAdmin } = useIsAdmin(!!session?.user);
+  if (!isAdmin) return null;
+  return (
+    <Row label="Admin panel" hint="Analytics, players, prices and app config">
+      <Link to="/admin" className="rounded-xl border border-border px-3 py-2 text-xs font-semibold">
+        Open
+      </Link>
+    </Row>
   );
 }
