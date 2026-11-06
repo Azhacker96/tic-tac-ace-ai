@@ -11,6 +11,8 @@ import type { ErrorComponentProps } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
+import { useAppSettings, useIsAdmin } from "@/lib/app-settings";
+import { useApp } from "@/lib/app-context";
 import { BottomNav, useHasBottomNav } from "@/components/BottomNav";
 import { AdHost } from "@/components/AdHost";
 import { LuckySpin } from "@/components/LuckySpin";
@@ -148,6 +150,7 @@ function RootComponent() {
         <PlayerSheet />
         <LuckySpin />
         <AdHost />
+        <RemoteConfig />
         <Toaster position="top-center" />
       </AppProvider>
     </QueryClientProvider>
@@ -157,4 +160,21 @@ function RootComponent() {
 function NavPadding({ children }: { children: ReactNode }) {
   const has = useHasBottomNav();
   return <div style={has ? { paddingBottom: "calc(4rem + env(safe-area-inset-bottom))" } : undefined}>{children}</div>;
+}
+
+/** Loads admin-managed config and shows the maintenance screen to non-admins. */
+function RemoteConfig() {
+  const { data } = useAppSettings();
+  const { session } = useApp();
+  const { data: isAdmin } = useIsAdmin(!!session?.user);
+  if (!data?.general.maintenance || isAdmin) return null;
+  return (
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-3 bg-background p-8 text-center">
+      <p className="text-4xl">🛠️</p>
+      <h1 className="font-display text-xl">Under maintenance</h1>
+      <p className="text-sm text-muted-foreground">
+        {data.general.maintenance_message || "We're upgrading the game. Please check back soon."}
+      </p>
+    </div>
+  );
 }
